@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>{% if webTitle %}{{ webTitle }}{% else %}{{ siteTitle }}{% endif %}</title>
+    <meta name="keyword" content="{{ siteKeyword }}" />
+    <meta name="description" content="{{ siteDescription }}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ siteUrl('static/components/bootstrap/dist/css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ siteUrl('static/styles/font-awesome.min.css') }}" />
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ siteUrl('static/styles/smartadmin-production.css') }}" />
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ siteUrl('static/styles/smartadmin-skins.css') }}" />
+  </head>
+  <body{% block body_class %}{% endblock %}>
+  {% block body %}
+  {% endblock %}
+    <script src="{{ siteUrl('static/components/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ siteUrl('static/components/jquery-ui/ui/jquery-ui.js') }}"></script>
+    <script src="{{ siteUrl('static/components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+  {% block footscripts %}
+  {% endblock %}
+  </body>
+</html>

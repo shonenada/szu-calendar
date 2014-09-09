@@ -7,7 +7,6 @@ class Master extends \Controller\BaseController {
     static public $url = '/';
 
     static public function get() {
-        return 'hellow';
+        return self::render('index.html', get_defined_vars());
     }
-
 }

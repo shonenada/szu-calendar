@@ -10,6 +10,8 @@ class ViewVariable {
     static public function init() {
         static::$vars = array(
             'siteTitle' => 'SZU Calendar',
+            'siteKeyword' => 'SZU Calendar',
+            'siteDescription' => 'SZU Calendar',
             'langCode' => \Slim\Slim::getInstance()->getCookie('lang.code'),
         );
     }
