@@ -11,6 +11,7 @@ class ViewFunction {
     static private $trans = null;
     static private $execTime = null;
     static private $dateDifference = null;
+    static private $staticUrl = null;
 
     static public function init() {
 
@@ -35,10 +36,23 @@ class ViewFunction {
             return $end->getTimestamp() - $start->getTimestamp();
         });
 
+        static::$staticUrl = new \Twig_SimpleFunction('staticUrl', function ($url, $withUrl = false, $withUri = true, $appName = 'default') {
+            $uri = '/' . ltrim($url, '/');
+            if ($withUrl) {
+                $req = \Slim\Slim::getInstance($appName)->request();
+                if ($withUri) {
+                    $uri .= $req->getRootUri();
+                }
+                $uri = $req->getUrl() . $uri;
+            }
+            return $uri;
+        });
+
         static::$functions = array(
             static::$trans,
             static::$execTime,
             static::$dateDifference,
+            static::$staticUrl,
         );
     }
 
