@@ -37,8 +37,11 @@ function createApp ($configFiles=array()) {
     $app->config($config);
 
     // 读取用户自定义的配置
-    foreach($configFiles as $path)
-        $app->config(require_once($path));
+    foreach ($configFiles as $path) {
+        if (is_file($path)) {
+            $app->config(require_once($path));
+        }
+    }
 
     \Extension\View::setup($app);
     \Extension\Middleware::setup($app);
