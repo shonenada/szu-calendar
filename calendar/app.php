@@ -7,14 +7,15 @@
  */
 
 $installedApps = array (
-    'master',
+    'Master',
 );
 
 
 function __autoloader($class) {
     global $installedApps;
-    foreach ($installedApps as $n => $p) {
-        $path = sprintf(APPROOT . "App/%s/%s.php", $p, $class);
+    $cls = str_replace('\\', '/', $class);
+    foreach ($installedApps as $app) {
+        $path = sprintf(APPROOT . "App/%s/%s.php", strtolower($app), $cls);
         if (is_file($path)) {
             require $path;
         }
