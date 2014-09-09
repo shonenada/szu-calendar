@@ -1,0 +1,15 @@
+<?php
+
+return array(
+    'dbname' => 'calendar',
+    'user' => 'root',
+    'password' => '',
+    'host' => 'localhost',
+    'driver' => 'pdo_mysql',
+    'charset' => 'utf8',
+    'driverOptions' => array(
+        1002=>'SET NAMES utf8'
+    )
+    // 'driver' => 'pdo_sqlite',
+    // 'path' => mb_convert_encoding(DOCROOT . 'runtime/calendar.sqlite', 'UTF-8', 'GBK'),
+);
