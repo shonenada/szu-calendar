@@ -9,4 +9,8 @@ class SignIn extends \Controller\BaseController {
     static public function get() {
         return self::render('account/signin.html', get_defined_vars());
     }
+
+    static public function post() {
+        
+    }
 }

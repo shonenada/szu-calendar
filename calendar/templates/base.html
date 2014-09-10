@@ -7,17 +7,27 @@
     <meta name="keyword" content="{{ siteKeyword }}" />
     <meta name="description" content="{{ siteDescription }}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <link rel="stylesheet" type="text/css" media="screen" href="{{ staticUrl('static/components/bootstrap/dist/css/bootstrap.min.css') }}" />
-    <link rel="stylesheet" type="text/css" media="screen" href="{{ staticUrl('static/styles/font-awesome.min.css') }}" />
-    <link rel="stylesheet" type="text/css" media="screen" href="{{ staticUrl('static/styles/smartadmin-production.css') }}" />
-    <link rel="stylesheet" type="text/css" media="screen" href="{{ staticUrl('static/styles/smartadmin-skins.css') }}" />
+    {{ renderCss('components/bootstrap/dist/css/bootstrap.min.css') | raw }}
+    {{ renderCss('styles/font-awesome.min.css') | raw }}
+    {{ renderCss('styles/smartadmin-production.css') | raw }}
+    {{ renderCss('styles/smartadmin-skins.css') | raw }}
   </head>
-  <body{% block body_class %}{% endblock %}>
+  <body {% block body_class %}{% endblock %}>
   {% block body %}
   {% endblock %}
-    <script src="{{ staticUrl('static/components/jquery/dist/jquery.min.js') }}"></script>
-    <script src="{{ staticUrl('static/components/jquery-ui/ui/jquery-ui.js') }}"></script>
-    <script src="{{ staticUrl ('static/components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+    {{ renderJs('components/jquery/dist/jquery.min.js') | raw }}
+    {{ renderJs('components/jquery-ui/ui/jquery-ui.js') | raw }}
+    {{ renderJs('components/bootstrap/dist/js/bootstrap.min.js') | raw }}
+    {{ renderJs('scripts/notification/SmartNotification.min.js') | raw }}
+    {{ renderJs('scripts/smartwidgets/jarvis.widget.min.js') | raw }}
+    {{ renderJs('scripts/plugins/easy-pie-chart/jquery.easy-pie-chart.min.js') | raw }}
+    {{ renderJs('scripts/plugins/sparkline/jquery.sparkline.min.js') | raw }}
+    {{ renderJs('scripts/plugins/jquery-validate/jquery.validate.min.js') | raw }}
+    {{ renderJs('scripts/plugins/masked-input/jquery.maskedinput.min.js') | raw }}
+    {{ renderJs('scripts/plugins/select2/select2.min.js') | raw }}
+    {{ renderJs('scripts/plugins/bootstrap-slider/bootstrap-slider.min.js') | raw }}
+    {{ renderJs('scripts/plugins/msie-fix/jquery.mb.browser.min.js') | raw }}
+    {{ renderJs('scripts/plugins/fastclick/fastclick.js') | raw }}
   {% block footscripts %}
   {% endblock %}
   </body>

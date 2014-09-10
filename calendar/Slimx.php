@@ -34,6 +34,13 @@ class Slimx extends \Slim\Slim {
         }
     }
 
+    private function generate_name($controller) {
+        $name = $this->camel2underline($controller);
+        $name = explode('\\', $name);
+        $name = array_pop($name);
+        return $name;
+    }
+
     private function camel2underline($camel) {
         return strtolower(preg_replace('/((?<=[a-z])(?=[A-Z]))/', '_', $camel));
     }
@@ -83,7 +90,7 @@ class Slimx extends \Slim\Slim {
         }
 
         $url = $vars['url'];
-        $name = $this->camel2underline($controller);
+        $name = $this->generate_name($controller);
 
         if (method_exists($controller, 'get'))
             $handler = $this->get($url, "$controller::_get")->name("{$name}_get");
