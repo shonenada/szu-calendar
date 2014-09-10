@@ -17,15 +17,9 @@ class Auth {
                     $user = null;
                 }
             }
-            \GlobalEnv::set('user', $user);
-            View::addGlobalVariable($app, 'loggedUser', $user);
-
             $resource = $app->request->getPath();
             $method = $app->request->getMethod();
-            $ptable = require(APPROOT . "permissions.php");
-            $auth = new \RBAC\Authentication();
-            $auth->load($ptable);
-            if (!$auth->accessiable($user, $resource, $method)) {
+            if (!$app->accessiable($user, $resource, $method)) {
                 $app->halt(403, "Cookies is expired, please sign in again.");
             }
         });

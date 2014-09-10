@@ -10,6 +10,13 @@
 class Slimx extends \Slim\Slim {
 
     protected $installedApps = array();
+    protected $permissions = array();
+    protected $auth = null;
+
+    public function __construct(array $userSettings = array()) {
+        parent::__construct($userSettings);
+        $this->auth = new \RBAC\Authentication();
+    }
 
     public function __autoloader($class) {
         global $installedApps;
@@ -20,6 +27,10 @@ class Slimx extends \Slim\Slim {
                 require $path;
             }
         }
+    }
+
+    public function accessiable($user, $resource, $method) {
+        return $this->auth->accessiable($user, $resource, $method);
     }
 
     private function scanDir($path, $callback) {
@@ -90,7 +101,7 @@ class Slimx extends \Slim\Slim {
             return ;
         }
 
-        $url = $vars['url'];
+        $resource = $url = $vars['url'];
         $name = $this->generate_name($controller);
 
         if (method_exists($controller, 'get'))
@@ -105,8 +116,35 @@ class Slimx extends \Slim\Slim {
         if (method_exists($controller, 'delete'))
             $handler = $this->delete($url, "$controller::_delete")->name("{$name}_delete");
 
-        if (array_key_exists('conditions', $vars))
+        if (array_key_exists('conditions', $vars)) {
             $handler->conditions($vars['conditions']);
+            foreach ($vars['conditions'] as $key => $value) {
+                $resource = str_replace($key, $value, $resource);
+            }
+        }
+
+        $resource = preg_replace('/:[^\/]+/', '\S+', $resource);
+
+        if (array_key_exists('allow', $vars)) {
+            foreach ($vars['allow'] as $method => $roles) {
+                foreach ($roles as $roleName){
+                    $path = sprintf("\\RBAC\\Roles\\%s::getInstance", $roleName);
+                    $role = call_user_func($path);
+                    $this->auth->allow($role, $resource, $method);
+                }
+            }
+        }
+
+        if (array_key_exists('deny', $vars)) {
+            foreach ($vars['deny'] as $method => $roles) {
+                foreach ($roles as $roleName){
+                    $path = sprintf("\\RBAC\\Roles\\%s::getInstance", $roleName);
+                    $role = call_user_func($path);
+                    $this->auth->deny($role, $resource, $method);
+                }
+            }
+        }
+
     }
 
 }
