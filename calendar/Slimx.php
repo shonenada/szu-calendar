@@ -59,13 +59,14 @@ class Slimx extends \Slim\Slim {
         return $route;
     }
 
-    protected function scanController($moduleName){
-        $controllerPath = APPROOT . DIRECTORY_SEPARATOR . "App/${moduleName}/Controller/*";
-        $this->scanDir($controllerPath, function($input) use($moduleName) {
-            $input = str_replace(APPROOT . DIRECTORY_SEPARATOR . "App/${moduleName}", '', $input);
+    protected function loadModule($moduleName){
+        $controllerPath = APPROOT . "App/${moduleName}/Controller/*";
+        $_self = $this;
+        $this->scanDir($controllerPath, function ($input) use($moduleName, $_self) {
+            $input = str_replace(APPROOT . "App/${moduleName}", '', $input);
             $input = str_replace('.php', '', $input);
             $controller = str_replace('/', '\\', $input);
-            $this->registerController($controller);
+            $_self->registerController($controller);
         });
     }
 
@@ -73,7 +74,7 @@ class Slimx extends \Slim\Slim {
         spl_autoload_register(array('Slimx', '__autoloader'));
         $this->installedApps = $installedApps;
         foreach ($installedApps as $name) {
-            $this->scanController($name);
+            $this->loadModule($name);
         }
     }
 

@@ -7,8 +7,8 @@
  */
 
 $installedApps = array (
-    'Master',
-    'Account',
+    'master',
+    'account',
 );
 
 
