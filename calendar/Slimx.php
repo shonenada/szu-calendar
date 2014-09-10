@@ -11,7 +11,7 @@ class Slimx extends \Slim\Slim {
 
     protected $installedApps = array();
 
-    private function __autoloader($class) {
+    public function __autoloader($class) {
         global $installedApps;
         $cls = str_replace('\\', '/', $class);
         foreach ($installedApps as $app) {
