@@ -1,0 +1,8 @@
+composer.lock
+cache/
+wwwroot/static/components
+wwwroot/static/scripts/plugins
+wwwroot/static/fonts
+*.conf.php
+vendor/
+.DS_Store
