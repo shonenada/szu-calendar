@@ -11,6 +11,29 @@ class Slimx extends \Slim\Slim {
 
     protected $installedApps = array();
 
+    private function __autoloader($class) {
+        global $installedApps;
+        $cls = str_replace('\\', '/', $class);
+        foreach ($installedApps as $app) {
+            $path = sprintf(APPROOT . "App/%s/%s.php", strtolower($app), $cls);
+            if (is_file($path)) {
+                require $path;
+            }
+        }
+    }
+
+    private function scanDir($path, $callback) {
+        foreach (glob($path) as $filename){
+            if (is_dir($filename)){
+                $this->scanDir($filename . "/*", $callback);
+            } else {
+                if (substr($filename, -3) == 'php'){
+                    $callback($filename);
+                }
+            }
+        }
+    }
+
     private function camel2underline($camel) {
         return strtolower(preg_replace('/((?<=[a-z])(?=[A-Z]))/', '_', $camel));
     }
@@ -29,41 +52,53 @@ class Slimx extends \Slim\Slim {
         return $route;
     }
 
+    protected function scanController($moduleName){
+        $controllerPath = APPROOT . DIRECTORY_SEPARATOR . "App/${moduleName}/Controller/*";
+        $this->scanDir($controllerPath, function($input) use($moduleName) {
+            $input = str_replace(APPROOT . DIRECTORY_SEPARATOR . "App/${moduleName}", '', $input);
+            $input = str_replace('.php', '', $input);
+            $controller = str_replace('/', '\\', $input);
+            $this->registerController($controller);
+        });
+    }
+
     public function installApps($installedApps) {
+        spl_autoload_register(array('Slimx', '__autoloader'));
         $this->installedApps = $installedApps;
         foreach ($installedApps as $name) {
-            $this->registerController($name);
+            $this->scanController($name);
         }
     }
 
     // 注册控制器方法，将 php 控制注册到 app 内部，并安装控制器。
     public function registerController ($controller) {
-        $cls = sprintf("\Controller\\%s", str_replace('.', '\\', $controller));
-        $vars = get_class_vars($cls);
+        $vars = get_class_vars($controller);
 
-        if (array_key_exists('url', $vars))
-            $url = $vars['url'];
-        else
-            $url = '/' . strtolower(str_replace('.', '/', $controller));
+        if (!$vars) {
+            return ;
+        }
 
-        $name = $this->camel2underline(str_replace('.', '_', $controller));
+        if (!array_key_exists('url', $vars)) {
+            return ;
+        }
 
-        if (method_exists($cls, 'get'))
-            $handler = $this->get($url, "$cls::_get")->name("{$name}_get");
+        $url = $vars['url'];
+        $name = $this->camel2underline($controller);
 
-        if (method_exists($cls, 'post'))
-            $handler = $this->post($url, "$cls::_post")->name("{$name}_post");
+        if (method_exists($controller, 'get'))
+            $handler = $this->get($url, "$controller::_get")->name("{$name}_get");
 
-        if (method_exists($cls, 'put'))
-            $handler = $this->put($url, "$cls::_put")->name("{$name}_put");
+        if (method_exists($controller, 'post'))
+            $handler = $this->post($url, "$controller::_post")->name("{$name}_post");
 
-        if (method_exists($cls, 'delete'))
-            $handler = $this->delete($url, "$cls::_delete")->name("{$name}_delete");
+        if (method_exists($controller, 'put'))
+            $handler = $this->put($url, "$controller::_put")->name("{$name}_put");
+
+        if (method_exists($controller, 'delete'))
+            $handler = $this->delete($url, "$controller::_delete")->name("{$name}_delete");
 
         if (array_key_exists('conditions', $vars))
             $handler->conditions($vars['conditions']);
     }
-
-
 
 }

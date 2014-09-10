@@ -8,19 +8,8 @@
 
 $installedApps = array (
     'Master',
+    'Account',
 );
-
-
-function __autoloader($class) {
-    global $installedApps;
-    $cls = str_replace('\\', '/', $class);
-    foreach ($installedApps as $app) {
-        $path = sprintf(APPROOT . "App/%s/%s.php", strtolower($app), $cls);
-        if (is_file($path)) {
-            require $path;
-        }
-    }
-}
 
 
 // 系统入口工厂函数
@@ -28,8 +17,6 @@ function createApp ($configFiles=array()) {
 
     if(!is_array($configFiles))
         exit('Config files are not array.');
-
-    spl_autoload_register('__autoloader');
 
     // 初始化 app
     $app = new Slimx();
