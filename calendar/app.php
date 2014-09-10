@@ -31,11 +31,12 @@ function createApp ($configFiles=array()) {
         }
     }
 
-    \Extension\View::setup($app);
-    \Extension\Middleware::setup($app);
-
     global $installedApps;
     $app->installApps($installedApps);
+
+    \Extension\Auth::setup($app);
+    \Extension\View::setup($app);
+    \Extension\Middleware::setup($app);
 
     return $app;
 
