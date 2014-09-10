@@ -46,12 +46,12 @@ class BaseController {
         return $return;
     }
 
-    static protected function render($path, $args) {
-        return self::$app->render($path, $args);
+    static protected function render($path, $args = array(), $status = null) {
+        return self::$app->render($path, $args, $status);
     }
 
-    static public function redirect($url) {
-        return self::$app->redirect($url);
+    static public function redirect($url, $status = 302) {
+        return self::$app->redirect($url, $status);
     }
 
     static public function urlFor($name, $params = array()) {

@@ -20,7 +20,7 @@ class Auth {
             $resource = $app->request->getPath();
             $method = $app->request->getMethod();
             if (!$app->accessiable($user, $resource, $method)) {
-                $app->halt(403, "Cookies is expired, please sign in again.");
+                $app->redirect($app->urlFor('error-403_get'));
             }
         });
     }

@@ -102,9 +102,13 @@ class Slimx extends \Slim\Slim {
         }
 
         $resource = $url = $vars['url'];
-        $name = $this->generate_name($controller);
+        if (array_key_exists('name', $vars)) {
+            $name = $vars['name'];
+        } else {
+            $name = $this->generate_name($controller);
+        }
 
-        if (method_exists($controller, 'get'))
+        if (method_exists($controller, 'get')) 
             $handler = $this->get($url, "$controller::_get")->name("{$name}_get");
 
         if (method_exists($controller, 'post'))
