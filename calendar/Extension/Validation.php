@@ -440,7 +440,7 @@ class Validation implements \ArrayAccess {
      * @param   mixed   translate the message
      * @return  array
      */
-    public function errors($file = NULL, $translate = TRUE)
+    public function errors($file = NULL)
     {
         if ($file === NULL)
         {
@@ -457,20 +457,6 @@ class Validation implements \ArrayAccess {
 
             // Get the label for this field
             $label = $this->_labels[$field];
-
-            if ($translate)
-            {
-                if (is_string($translate))
-                {
-                    // Translate the label using the specified language
-                    $label = __($label, NULL, $translate);
-                }
-                else
-                {
-                    // Translate the label
-                    $label = __($label);
-                }
-            }
 
             // Start the translation values list
             $values = array(
@@ -524,25 +510,30 @@ class Validation implements \ArrayAccess {
                     $values[':param'.($key + 1)] = $value;
                 }
             }
-            $message = "{$file}.{$field}.{$error}";
-            if ($translate)
+
+            if ($message = Message::message($file, "{$field}.{$error}"))
             {
-                if (is_string($translate))
-                {
-                    // Translate the message using specified language
-                    $message = __($message, $values, $translate);
-                }
-                else
-                {
-                    // Translate the message using the default language
-                    $message = __($message, $values);
-                }
+                // Found a message for this field and error
+            }
+            elseif ($message = Message::message($file, "{$field}.default"))
+            {
+                // Found a default message for this field
+            }
+            elseif ($message = Message::message($file, $error))
+            {
+                // Found a default message for this error
+            }
+            elseif ($message = Message::message('validation', $error))
+            {
+                // Found a default message for this error
             }
             else
             {
-                // Do not translate, just replace the values
-                $message = strtr($message, $values);
+                // No message exists, display the path expected
+                $message = "{$file}.{$field}.{$error}";
             }
+
+            $message = strtr($message, $values);
 
             // Set the message for this field
             $messages[$field] = $message;
