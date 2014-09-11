@@ -12,7 +12,7 @@ class Auth {
             if (empty($uid)){
                 $user = null;
             }else {
-                $user = \Model\User::find($uid);
+                $user = \Model\Account::find($uid);
                 if ($user && !($user->validateToken($token) && $user->validateIp($ip))) {
                     $user = null;
                 }
@@ -20,7 +20,8 @@ class Auth {
             $resource = $app->request->getPath();
             $method = $app->request->getMethod();
             if (!$app->accessiable($user, $resource, $method)) {
-                $app->redirect($app->urlFor('error-403_get'));
+                $app->halt('test');
+                // $app->redirect($app->urlFor('master.error-403[get]'));
             }
         });
     }
