@@ -1,89 +1,35 @@
 {% extends 'base.html' %}
 {% block body_class %}id="login"{% endblock %}
+
+{% block htmlhead %}
+{{ renderCss('styles/account.css') | raw }}
+{% endblock %}
+
 {% block body %}
-<div id="main" role="main" style="padding-top: 50px;">
-  <div id="content" class="container">
-    <div class="row">
-      <div class="col-xs-6 col-sm-4" style="float: none; margin: 0 auto;">
-        <div class="well no-padding">
-          <form action="{{ urlFor('sign_in_post') }}" id="login-form" class="smart-form client-form">
-            <header>Sign In</header>
-            <fieldset>
-              <section>
-              <label class="label">E-mail</label>
-                <label class="input">
-                  <i class="icon-append fa fa-user"></i>
-                  <input type="email" name="email" placeholder="Email" />
-                  <b class="tooltip tooltip-top-right">
-                    <i class="fa fa-user txt-color-teal"></i>
-                    Please enter email address/username
-                  </b>
-                </label>
-              </section>
-
-              <section>
-                <label class="label">Password</label>
-                <label class="input">
-                  <i class="icon-append fa fa-lock"></i>
-                  <input type="password" name="password" placeholder="Password" />
-                  <b class="tooltip tooltip-top-right">
-                    <i class="fa fa-lock txt-color-teal"></i>
-                    Enter your password
-                  </b>
-                </label>
-                <div class="note">
-                  <!-- <a href="#">Forgot password?</a> -->
-                </div>
-              </section>
-
-            <section>
-              <label class="checkbox">
-              <input type="checkbox" name="remember" checked="">
-              <i></i>Stay signed in</label>
-            </section>
-
-            </fieldset>
-
-            <footer>
-              <button type="submit" class="btn btn-primary">Sign in</button>
-              <a href="{{ urlFor('sign_up_get') }}" class="btn btn-danger">Creat account</a>
-            </footer>
-          </form>
+<div id="main">
+  <form action="{{ urlFor('account.sign_in[post]') }}" id="login-form" class="style-form">
+    <div id="login-box" class="box-with-border">
+      <div id="login-box-header" class="box-header">普通登录</div>
+        <div id="login-fieldset" class="box-body">
+          <div class="form-field">
+            <label class="label">用户名/邮箱</label>
+            <input type="text" name="username" placeholder="用户名 / 邮箱" />
+          </div>
+          <div class="form-field">
+            <label class="label">登录密码</label>
+            <input type="password" name="password" placeholder="登录密码" />
+          </div>
         </div>
+      <div id="login-box-footer" class="box-footer align-right">
+        <button type="submit" class="btn btn-primary">登录</button>
+        <a href="{{ urlFor('account.sign_up[get]') }}" class="btn btn-danger">注册</a>
       </div>
     </div>
+  </form>
+  <div class="align-center">
+    <a href="https://auth.szu.edu.cn/cas.aspx/login?service=http://ias.szu.edu.cn/account/cas" class="btn btn-large-width btn-success">深圳大学统一验证登录</a>
   </div>
 </div>
 {% endblock %}
-{% block footscripts %}
-<script src="{{ rootUrl('static/scripts/app.js') }}"></script>
-<script type="text/javascript">
-$(function() {
-$("#login-form").validate({
-  rules: {
-    email: {
-      required: true,
-      email: true
-    },
-    password: {
-      required: true,
-      minlength: 6,
-      maxlength: 16,
-    }
-  },
-  messages: {
-    email: {
-      required: 'Please enter your email address',
-      email: 'Please enter a VALID email address'
-    },
-    password: {
-      required: 'Please enter your password'
-    }
-  },
-  errorPlacement: function(error, element) {
-      error.insertAfter(element.parent());
-    }
-  });
-});
-</script>
+{% block bodyfoot %}
 {% endblock %}

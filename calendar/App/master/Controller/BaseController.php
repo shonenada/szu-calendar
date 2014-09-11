@@ -5,13 +5,22 @@ namespace Controller;
 class BaseController {
 
     static protected $app;
+    static protected $request;
+
+    static public $allow = array(
+        'GET' => array('EveryOne',),
+        'POST' => array('EveryOne',),
+        'PUT' => array('EveryOne',),
+        'DELETE' => array('EveryOne',),
+    );
 
     static public function before() {}
 
     static public function after() {}
 
     static private function prepare() {
-        self::$app = \Slim\Slim::getInstance();
+        $app = self::$app = \Slim\Slim::getInstance();
+        self::$request = $app->request;
     }
 
     static public function _get() {

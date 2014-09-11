@@ -1,0 +1,49 @@
+body {
+  font-family: 'Microsoft Yahei';
+  background-image: url(/static/images/bg.png);
+  -webkit-transition: all 0.25s ease-out;
+  -moz-transition: all 0.25s ease-out;
+  -o-transition: all 0.25s ease-out;
+  transition: all 0.25s ease-out;
+}
+
+.align-left {
+  text-align: left;
+}
+.align-right {
+  text-align: right;
+}
+.align-center {
+  text-align: center;
+}
+
+.box-with-border {
+  background: #fbfbfb;
+  border: 1px solid #ddd;
+  box-shadow: 0 1px 1px #ececec;
+  -webkit-box-shadow: 0 1px 1px #ececec;
+  -moz-box-shadow: 0 1px 1px #ececec;
+}
+
+.box-header {
+  margin: 0;
+  padding: 15px 13px;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: rgba(0,0,0,.1);
+  background: rgba(248,248,248,.9);
+}
+
+.box-body {
+  display: block;
+  padding: 25px 14px 15px;
+  border: 0;
+  background: rgba(255,255,255,.9);
+}
+
+.box-footer {
+  display: block;
+  padding: 7px 14px 15px;
+  border-top: 1px solid rgba(0,0,0,.1);
+  background: rgba(248,248,248,.9);
+}

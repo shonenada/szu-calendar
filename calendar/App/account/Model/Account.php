@@ -16,16 +16,21 @@ namespace Model;
  * @property string    $username
  * @property string    $password
  * @property string    $name
+ * @property string    $gender
+ * @property string    $college
  * @property string    $szuno
- * @property string    $cardid
+ * @property string    $card_id
+ * @property string    $identityNumber
+ * @property integer   $rankNum
  * @property string    $email
  * @property string    $phone
+ * @property string    $shortPhone
  * @property datetime  $created
- * @property datetime  $last_login
- * @property string    $last_ip
+ * @property datetime  $lastLogin
+ * @property string    $lastIP
  * @property string    $token
- * @property integer   $is_admin
- * @property integer   $is_deleted
+ * @property integer   $isAdmin
+ * @property integer   $isDeleted
  *
  **/
 
@@ -44,7 +49,7 @@ class Account extends ModelBase {
     private $username;
 
     /**
-     * @Column(name="password", type="string", length=50)
+     * @Column(name="password", type="string", length=64)
      **/
     private $password;
 
@@ -54,14 +59,34 @@ class Account extends ModelBase {
     private $name;
 
     /**
+     * @Column(name="gender", type="string", length=2)
+     **/
+    private $gender;
+
+    /**
+     * @Column(name="college", type="string", length=20)
+     **/
+    private $college;
+
+    /**
      * @Column(name="szuno", type="string", length=10)
      **/
     private $szuno;
 
     /**
-     * @Column(name="cardid", type="string", length=6)
+     * @Column(name="card_id", type="string", length=6)
      **/
-    private $cardid;
+    private $cardId;
+
+    /**
+     * @Column(name="identity_number", type="string", length=18)
+     **/
+    private $identityNumber;
+
+    /**
+     * @Column(name="rank_num", type="integer", length=2)
+     **/
+    private $rankNum;
 
     /**
      * @Column(name="email", type="string", length=150)
@@ -74,6 +99,11 @@ class Account extends ModelBase {
     private $phone;
 
     /**
+     * @Column(name="short_phone", type="string", length=11)
+     **/
+    private $shortPhone;
+
+    /**
      * @Column(name="created", type="datetime")
      **/
     public $created;
@@ -81,12 +111,12 @@ class Account extends ModelBase {
     /**
      * @Column(name="last_login", type="datetime")
      **/
-    public $last_login;
+    public $lastLogin;
 
     /**
      * @Column(name="last_ip", type="string", length=64)
      **/
-    public $last_ip;
+    public $lastIP;
 
     /**
      * @Column(name="token", type="string", length=64)
@@ -96,12 +126,12 @@ class Account extends ModelBase {
     /**
      * @Column(name="is_admin", type="boolean")
      **/
-    private $is_admin;
+    private $isAdmin;
 
     /**
      * @Column(name="is_deleted", type="boolean")
      **/
-    private $is_deleted;
+    private $isDeleted;
 
     public function getId() {
         return $this->id;
@@ -145,14 +175,14 @@ class Account extends ModelBase {
     }
 
     public function setIp($ip) {
-        $this->last_ip = $ip;
+        $this->lastIP = $ip;
     }
 
-    public function setLastLogin ($datetime) {
-        $this->last_login = $datetime;
+    public function setLastLogin($datetime) {
+        $this->lastLogin = $datetime;
     }
 
-    public function setToken ($token) {
+    public function setToken($token) {
         $this->token = $token;
     }
 
@@ -161,16 +191,16 @@ class Account extends ModelBase {
     }
 
     public function isActivity() {
-        return ($this->is_deleted == 0);
+        return ($this->isDeleted == false);
     }
 
     public function isAdmin() {
-        return ($this->is_admin == 1);
+        return ($this->isAdmin == true);
     }
 
     public function __construct() {
-        $this->is_admin = false;
-        $this->is_deleted = false;
+        $this->isAdmin = false;
+        $this->isDeleted = false;
         $this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -184,11 +214,11 @@ class Account extends ModelBase {
     }
 
     public function validateIp($ip) {
-        return $this->last_ip == $ip;
+        return $this->lastIP == $ip;
     }
 
     public function delete() {
-        $this->is_deleted = true;
+        $this->isDeleted = true;
         $this->save();
     }
 
@@ -198,17 +228,13 @@ class Account extends ModelBase {
     }
 
     static public function findByUsername($username) {
-        $query = static::query()->findOneBy(array('username' => $username, 'is_deleted' => false));
-        if ($query != null){
-            return $query;
-        }
-        else {
-            return null;
-        }
+        $query = static::query()->findOneBy(array('username' => $username, 'isDeleted' => false));
+        return $query;
     }
 
-    static public function checkExist($username) {
-        return (self::findByUsername($username) != null);
+    static public function isExistBy($field, $value) {
+        $query = static::query()->findOneBy(array($field => $value, 'isDeleted' => false));
+        return $query != null;
     }
 
 }

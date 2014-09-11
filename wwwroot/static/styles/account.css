@@ -1,0 +1,9 @@
+body#login #main {
+    padding-top: 50px;
+    padding-bottom: 100px;
+}
+
+#login-box {
+    width: 400px;
+    margin: 0 auto;
+}

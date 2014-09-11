@@ -68,7 +68,7 @@ class ModelBase {
     static public function paginate($page, $pagesize) {
         $dql = sprintf(
             'SELECT n FROM %s n '.
-            'WHERE n.is_deleted = 0 ',
+            'WHERE n.isDeleted = 0 ',
             get_called_class()
         );
         $query = static::em()->createQuery($dql)->setFirstResult($pagesize*($page-1))->setMaxResults($pagesize);
