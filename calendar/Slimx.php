@@ -9,6 +9,7 @@
 
 class Slimx extends \Slim\Slim {
 
+    protected $webRoot = '/';
     protected $installedApps = array();
     protected $permissions = array();
     protected $auth = null;
@@ -49,7 +50,7 @@ class Slimx extends \Slim\Slim {
         $name = $this->camel2underline($controller);
         $name = explode('\\', $name);
         $name = array_pop($name);
-        return $name;
+        return strtolower($name);
     }
 
     private function camel2underline($camel) {
@@ -77,8 +78,12 @@ class Slimx extends \Slim\Slim {
             $input = str_replace(APPROOT . "App/${moduleName}", '', $input);
             $input = str_replace('.php', '', $input);
             $controller = str_replace('/', '\\', $input);
-            $_self->registerController($controller);
+            $_self->registerController($controller, $moduleName);
         });
+    }
+
+    public function setRoot($root) {
+        $this->webRoot = $root;
     }
 
     public function installApps($installedApps) {
@@ -90,7 +95,7 @@ class Slimx extends \Slim\Slim {
     }
 
     // 注册控制器方法，将 php 控制注册到 app 内部，并安装控制器。
-    public function registerController ($controller) {
+    public function registerController ($controller, $moduleName) {
         $vars = get_class_vars($controller);
 
         if (!$vars) {
@@ -101,7 +106,7 @@ class Slimx extends \Slim\Slim {
             return ;
         }
 
-        $resource = $url = $vars['url'];
+        $resource = $url = preg_replace('/\/+/', '/', $this->webRoot . $vars['url']);
         if (array_key_exists('name', $vars)) {
             $name = $vars['name'];
         } else {
@@ -109,16 +114,16 @@ class Slimx extends \Slim\Slim {
         }
 
         if (method_exists($controller, 'get')) 
-            $handler = $this->get($url, "$controller::_get")->name("{$name}_get");
+            $handler = $this->get($url, "$controller::_get")->name("${moduleName}.{$name}[get]");
 
         if (method_exists($controller, 'post'))
-            $handler = $this->post($url, "$controller::_post")->name("{$name}_post");
+            $handler = $this->post($url, "$controller::_post")->name("${moduleName}.{$name}[post]");
 
         if (method_exists($controller, 'put'))
-            $handler = $this->put($url, "$controller::_put")->name("{$name}_put");
+            $handler = $this->put($url, "$controller::_put")->name("${moduleName}.{$name}[put]");
 
         if (method_exists($controller, 'delete'))
-            $handler = $this->delete($url, "$controller::_delete")->name("{$name}_delete");
+            $handler = $this->delete($url, "$controller::_delete")->name("${moduleName}.{$name}[delete]");
 
         if (array_key_exists('conditions', $vars)) {
             $handler->conditions($vars['conditions']);
