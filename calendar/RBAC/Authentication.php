@@ -17,9 +17,9 @@ class Authentication{
         return $this;
     }
 
-    public function accessiable(\Model\User $user=null, $resource=null, $method=null){
+    public function accessiable(\Model\Account $user=null, $resource=null, $method=null){
 
-        $auth = function(Role $r=null, \Model\User $u=null){
+        $auth = function(Role $r=null, \Model\Account $u=null){
             return $r ? $r->authenticate($u) : false;
         };
 
@@ -46,7 +46,7 @@ class Authentication{
     }
 
     private function record(Role $role, $resource, $method, $action){
-        $key = "{$role->getRoleName()}-{$action}-{$resource}";
+        $key = "{$action}-{$role->getRoleName()}-{$method}-{$resource}";
         $this->ptable[$key] = array(
             "role" => $role,
             "resource" => $resource,
