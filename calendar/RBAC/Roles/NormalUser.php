@@ -16,7 +16,7 @@ class NormalUser extends EveryOne {
         return $this->parentName;
     }
 
-    public function authenticate(\Model\User $user=null) {
+    public function authenticate(\Model\Account $user=null) {
         return $user != null;
     }
 

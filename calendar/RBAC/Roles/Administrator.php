@@ -15,7 +15,7 @@ class Administrator extends NormalUser {
         return $this->roleName;        
     }
 
-    public function authenticate(\Model\User $user=null) {
+    public function authenticate(\Model\Account $user=null) {
         return $user != null && $user->isAdmin();
     }
 }

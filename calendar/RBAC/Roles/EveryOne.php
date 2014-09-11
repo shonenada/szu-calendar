@@ -25,7 +25,7 @@ class EveryOne implements Role {
         return $this->parentName;
     }
 
-    public function authenticate(\Model\User $user=null) {
+    public function authenticate(\Model\Account $user=null) {
         return true;
     }
 
