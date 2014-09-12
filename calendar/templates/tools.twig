@@ -1,0 +1,12 @@
+{% macro formErrors(errors) %}
+{% if errors %}
+<script>
+$(function(){
+  {% for name, errmsg in errors %}
+  $('[name={{ name }}]').addClass('error');
+  $('[name={{ name }}]').parent().append('<label id="{{ name }}-error" class="error" for="{{ name }}">{{ errmsg }}</label>');
+  {% endfor %}
+});
+</script>
+{% endif %}
+{% endmacro %}

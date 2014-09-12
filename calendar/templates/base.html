@@ -1,3 +1,4 @@
+{% import 'tools.twig' as tools %}
 <!DOCTYPE html>
 <html lang="zh">
   <head>
@@ -7,18 +8,20 @@
     <meta name="keyword" content="{{ siteKeyword }}" />
     <meta name="description" content="{{ siteDescription }}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    {{ renderJs('components/jquery/dist/jquery.min.js') | raw }}
     {{ renderCss('components/normalize.css/normalize.css') | raw }}
     {{ renderCss('styles/base.css') | raw }}
     {{ renderCss('styles/button.css') | raw }}
     {{ renderCss('styles/form.css') | raw }}
     {{ renderCss('styles/error.css') | raw }}
+    {{ renderCss('styles/alert.css') | raw }}
     {% block htmlhead %}
     {% endblock %}
   </head>
   <body {% block body_class %}{% endblock %}>
+  {% include 'flash_message.html.inc' %}
   {% block body %}
   {% endblock %}
-    {{ renderJs('components/jquery/dist/jquery.min.js') | raw }}
   {% block bodyfoot %}
   {% endblock %}
   </body>

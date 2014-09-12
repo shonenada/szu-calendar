@@ -1,9 +1,15 @@
-body#login #main {
+body#signup #main,
+body#signin #main {
     padding-top: 50px;
     padding-bottom: 100px;
 }
 
-#login-box {
+body#cas #main {
+    margin-top: 150px;
+}
+
+#signup-box,
+#signin-box {
     width: 400px;
     margin: 0 auto;
 }

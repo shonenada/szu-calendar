@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block body_class %}id="login"{% endblock %}
+{% block body_class %}id="signup"{% endblock %}
 
 {% block htmlhead %}
 {{ renderCss('styles/account.css') | raw }}
@@ -7,10 +7,10 @@
 
 {% block body %}
 <div id="main">
-  <form method="post" action="{{ urlFor('account.sign_up[post]') }}" id="login-form" class="style-form">
-    <div id="login-box" class="box-with-border">
-      <div id="login-box-header" class="box-header">注册</div>
-        <div id="login-fieldset" class="box-body">
+  <form method="post" action="{{ urlFor('account.sign_up[post]') }}" id="signup-form" class="style-form">
+    <div id="signup-box" class="box-with-border">
+      <div id="signup-box-header" class="box-header">注册</div>
+        <div id="signup-fieldset" class="box-body">
           <div class="form-field">
             <label class="label">用户名*</label>
             <input type="text" name="username" placeholder="用户名" />
@@ -44,7 +44,8 @@
             <input type="text" value="{{ szuno }}" disabled="disabled" />
           </div>
         </div>
-      <div id="login-box-footer" class="box-footer align-right">
+      <div id="signup-box-footer" class="box-footer align-right">
+        <a href="{{ urlFor('account.sign_in[get]') }}" class="btn btn-success">已有帐号?</a>
         <button type="submit" class="btn btn-primary">注册</button>
       </div>
     </div>
@@ -54,10 +55,33 @@
 {% endblock %}
 {% block bodyfoot %}
 {{ renderJs('components/jquery-validation/dist/jquery.validate.min.js') | raw }}
+{{ tools.formErrors(errors) }}
 <script>
 $(function() {
-  $("#login-form").validate({
-
+  $("#signup-form").validate({
+    rules: {
+      username: {
+        required: true,
+      },
+      email: {
+        required: false,
+        email: true
+      },
+      password: {
+        required: true,
+        minlength: 6,
+        maxlength: 20
+      },
+      phone: {
+        required: false,
+        digits: true,
+      },
+      shortPhone: {
+        required: false,
+        digits: true,
+        rangelength: [3, 6],
+      }
+    },
     messages : {
       username: {
         required: '请输入用户名',
@@ -79,10 +103,6 @@ $(function() {
         rangelength: '请填写正确的短号',
       }
     },
-    errorPlacement : function(error, element) {
-      error.hide();
-      error.appendTo(element.parent());
-    }
   });
 });
 </script>
