@@ -41,7 +41,6 @@ class ViewGlobalExtension extends \Twig_Extension {
             'siteTitle' => 'SZU Calendar',
             'siteKeyword' => 'SZU Calendar',
             'siteDescription' => 'SZU Calendar',
-            'langCode' => \Slim\Slim::getInstance()->getCookie('lang.code'),
         );
     }
 }

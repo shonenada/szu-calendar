@@ -395,7 +395,10 @@ fieldset[disabled] .btn-link:focus {
   margin-top: 5px;
 }
 .btn-large-width {
+  height: 28px;
   width: 300px;
+  line-height: 28px;
+  border-radius: 3px;
 }
 
 input[type="submit"].btn-block,

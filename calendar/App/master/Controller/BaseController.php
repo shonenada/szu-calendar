@@ -8,6 +8,8 @@ class BaseController {
 
     static protected $app;
     static protected $request;
+    static protected $currentUser;
+    static private $injectedArgs = array();
 
     static public $allow = array(
         'GET' => array('EveryOne',),
@@ -22,7 +24,17 @@ class BaseController {
 
     static private function prepare() {
         $app = self::$app = \Slim\Slim::getInstance();
-        self::$request = $app->request;
+        $request = self::$request = $app->request;
+        $user = self::$currentUser = self::getCurrentUser();
+        $injectedArgs['user'] = $user;
+    }
+
+    static public function getCurrentUser() {
+        if (!isset(self::$app)) 
+            self::$app = \Slim\Slim::getInstance();
+        $uid = self::$app->getCookie("userid");
+        $user = \Model\Account::find($uid);
+        return $user;
     }
 
     static public function _get() {
@@ -62,11 +74,18 @@ class BaseController {
     }
 
     static protected function render($path, $args = array(), $status = null) {
+        $args = array_merge($args, self::$injectedArgs);
         return self::$app->render($path, $args, $status);
     }
 
     static public function redirect($url, $status = 302) {
+        self::$app->flashRedirectKeep();
         return self::$app->redirect($url, $status);
+    }
+
+    static public function redirectIfSignIned($url, $status = 302) {
+        if (self::$currentUser)
+            return self::redirect($url, $status);
     }
 
     static public function urlFor($name, $params = array()) {

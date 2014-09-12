@@ -7,17 +7,17 @@
 
 {% block body %}
 <div id="main">
-  <form action="{{ urlFor('account.sign_in[post]') }}" id="signin-form" class="style-form">
+  <form method="post" action="{{ urlFor('account.sign_in[post]') }}" id="signin-form" class="style-form">
     <div id="signin-box" class="box-with-border">
       <div id="signin-box-header" class="box-header">普通登录</div>
         <div id="signin-fieldset" class="box-body">
           <div class="form-field">
-            <label class="label">用户名/邮箱</label>
-            <input type="text" name="username" placeholder="用户名 / 邮箱" />
+            <label class="label">用户名</label>
+            <input type="text" name="username" placeholder="用户名" />
           </div>
           <div class="form-field">
-            <label class="label">登录密码</label>
-            <input type="password" name="password" placeholder="登录密码" />
+            <label class="label">密码</label>
+            <input type="password" name="password" placeholder="密码" />
           </div>
         </div>
       <div id="signin-box-footer" class="box-footer align-right">
@@ -42,45 +42,21 @@ $(function() {
       username: {
         required: true,
       },
-      email: {
-        required: false,
-        email: true
-      },
       password: {
         required: true,
         minlength: 6,
         maxlength: 20
       },
-      phone: {
-        required: false,
-        digits: true,
-      },
-      shortPhone: {
-        required: false,
-        digits: true,
-        rangelength: [3, 6],
-      }
     },
     messages : {
       username: {
         required: '请输入用户名',
-      },
-      email: {
-        email: '邮箱格式不正确',
       },
       password: {
         required: '请输入密码',
         minlength: '密码不能少于 6 位',
         maxlength: '密码不能多于 20 位',
       },
-      phone: {
-        digits: '请填写正确的长号',
-        rangelength: '请填写正确的长号',
-      },
-      shortPhone: {
-        digits: '请填写正确的短号',
-        rangelength: '请填写正确的短号',
-      }
     },
   });
 });

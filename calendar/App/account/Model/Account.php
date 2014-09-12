@@ -29,14 +29,16 @@ namespace Model;
  * @property datetime  $lastLogin
  * @property string    $lastIP
  * @property string    $token
- * @property integer   $isAdmin
- * @property integer   $isDeleted
+ * @property boolean   $isAdmin
+ * @property boolean   $isActive
+ * @property boolean   $isDeleted
  *
  **/
 
 class Account extends ModelBase {
 
     const PASSWORD_SALT = 'TODO';
+    const TOKEN_SALT = 'TOKENTODO';
 
     public static $RANK_NAME = array(
         '01' => '本科生',
@@ -86,7 +88,7 @@ class Account extends ModelBase {
     /**
      * @Column(name="password", type="string", length=64)
      **/
-    public $password;
+    private $password;
 
     /**
      * @Column(name="name", type="string", length=50)
@@ -164,25 +166,33 @@ class Account extends ModelBase {
     public $isAdmin;
 
     /**
+     * @Column(name="is_active", type="boolean")
+     **/
+    public $isActive;
+
+    /**
      * @Column(name="is_deleted", type="boolean")
      **/
     public $isDeleted;
 
-    static public function factory($value = array()) {
-        $account = new Account();
-        $account->username = $value['username'];
-        $account->setPassword($value['password']);
-        $account->name = $value['name'];
-        $account->college = $value['college'];
-        $account->gender = $value['gender'];
-        $account->szuno = $value['szuno'];
-        $account->cardId = $value['cardId'];
-        $account->identityNumber = $value['identityNumber'];
-        $account->rankNum = $value['rankNum'];
-        $account->email = $value['email'];
-        $account->phone = $value['phone'];
-        $account->shortPhone = $value['shortPhone'];
-        return $account;
+    public function __construct() {
+        $this->isActive = true;
+        $this->isAdmin = false;
+        $this->isDeleted = false;
+        $this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    public function login($app) {
+        $now = new \DateTime('now', new \DateTimezone('Asia/Shanghai'));
+        $ip = $app->request->getIp();
+        $token = \Extension\Encryption::generateToken($ip, $now, self::TOKEN_SALT);
+        $this->token = $token;
+        $this->ip = $ip;
+        $this->lastLogin = $now;
+        $this->save();
+        Account::flush();
+        $app->setEncryptedCookie('userid', $this->id);
+        $app->setEncryptedCookie('token', $token);
     }
 
     public function setPassword($raw) {
@@ -190,18 +200,12 @@ class Account extends ModelBase {
         $this->password = $hashPassword;
     }
 
-    public function isActivity() {
-        return ($this->isDeleted == false);
+    public function isActive() {
+        return ($this->isActive == true);
     }
 
     public function isAdmin() {
         return ($this->isAdmin == true);
-    }
-
-    public function __construct() {
-        $this->isAdmin = false;
-        $this->isDeleted = false;
-        $this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     public function checkPassword($rawPassword) {
@@ -220,6 +224,38 @@ class Account extends ModelBase {
     public function delete() {
         $this->isDeleted = true;
         $this->save();
+        Account::flush();
+    }
+
+    static public function factory($value = array()) {
+        $account = new Account();
+        $account->username = $value['username'];
+        $account->setPassword($value['password']);
+        $account->name = $value['name'];
+        $account->college = $value['college'];
+        $account->gender = $value['gender'];
+        $account->szuno = $value['szuno'];
+        $account->cardId = $value['cardId'];
+        $account->identityNumber = $value['identityNumber'];
+        $account->rankNum = $value['rankNum'];
+        $account->email = $value['email'];
+        $account->phone = $value['phone'];
+        $account->shortPhone = $value['shortPhone'];
+        return $account;
+    }
+
+    static public function authenticate($username, $password) {
+        $account = self::getByUsername($username);
+        if (!$account) {
+            return false;
+        }
+        if (!$account->checkPassword($password)) {
+            return false;
+        }
+        if (!$account->isActive()) {
+            return null;
+        }
+        return $account;
     }
 
     static public function hashPassword($password) {
@@ -228,7 +264,7 @@ class Account extends ModelBase {
         return $hash;
     }
 
-    static public function findByUsername($username) {
+    static public function getByUsername($username) {
         $query = static::query()->findOneBy(array('username' => $username, 'isDeleted' => false));
         return $query;
     }

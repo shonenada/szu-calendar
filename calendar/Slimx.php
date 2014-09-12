@@ -96,7 +96,15 @@ class Slimx extends \Slim\Slim {
                 $msg = array();
 
             array_push($msg, $value);
-            $this->environment['slim.flash']->set($key, $msg);
+            $this->environment['slim.flash']->now($key, $msg);
+        }
+    }
+
+    public function flashRedirectKeep() {
+        if (isset($this->environment['slim.flash'])) {
+            $messages = $this->environment['slim.flash']->getMessages();
+            foreach ($messages as $key => $msg)
+                $this->environment['slim.flash']->set($key, $msg);
         }
     }
 

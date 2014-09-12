@@ -6,7 +6,7 @@ class Auth {
 
     static public function setup($app) {
         $app->hook("slim.before.dispatch", function () use ($app){
-            $uid = $app->getCookie("user_id");
+            $uid = $app->getCookie("userid");
             $ip = $app->request->getIp();
             $token = $app->getCookie("token");
             if (empty($uid)){
@@ -20,8 +20,7 @@ class Auth {
             $resource = $app->request->getPath();
             $method = $app->request->getMethod();
             if (!$app->accessiable($user, $resource, $method)) {
-                $app->halt('test');
-                // $app->redirect($app->urlFor('master.error-403[get]'));
+                $app->redirect($app->urlFor('master.error-403[get]'));
             }
         });
     }
