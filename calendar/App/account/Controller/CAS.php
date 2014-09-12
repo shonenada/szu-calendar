@@ -35,12 +35,14 @@ class CAS extends \Controller\BaseController {
             $identityNumber = $_SESSION['cas']['PersonalId'] = self::RegexLog($xmlString, "PersonalId");
             $rankNum = $_SESSION['cas']['RankName'] = self::RegexLog($xmlString, "RankName");
 
-            $is_user_exist = \Model\Account::isExistBy('szuno', $szuno);
-            if ($is_user_exist) {
-                self::redirect(self::urlFor('account.profile[get]'));
+            $isSzunoExist = \Model\Account::isExistBy('szuno', $szuno);
+            if ($isSzunoExist) {
+                return self::redirect(self::urlFor('account.profile[get]'));
             } else {
-                self::redirect(self::urlFor('account.sign_up[get]'));
+                return self::redirect(self::urlFor('account.sign_up[get]'));
             }
+        } else {
+            return self::render('account/cas.html');
         }
     }
 }

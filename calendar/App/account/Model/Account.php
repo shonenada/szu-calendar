@@ -36,72 +36,107 @@ namespace Model;
 
 class Account extends ModelBase {
 
+    const PASSWORD_SALT = 'TODO';
+
+    public static $RANK_NAME = array(
+        '01' => '本科生',
+        '02' => '研究生',
+        '03' => '博士生',
+        '04' => '留学生',
+        '05' => '教工',
+        '06' => '',
+        '07' => '教工家属',
+        '08' => '测试人员',
+        '09' => '',
+        '10' => '',
+        '11' => '成教学生',
+        '12' => '自考生',
+        '13' => '工作人员',
+        '14' => '离退休教工',
+        '15' => '',
+        '16' => '外联办学生',
+        '17' => '合作银行',
+        '18' => '',
+        '19' => '',
+        '20' => '外籍教师',
+        '21' => '博士后',
+        '22' => '',
+        '23' => '校友',
+        '24' => '校外人员',
+        '25' => '校内工作',
+        '26' => '校企人员',
+        '27' => '',
+        '28' => '交换留学生',
+        '29' => '消费卡贵宾',
+        '30' => '校外绿色通道',
+    );
+
     /**
      * @Column(name="id", type="integer", nullable=false)
      * @Id
      * @GeneratedValue
      **/
-    private $id;
+    public $id;
 
     /**
      * @Column(name="username", type="string", length=50)
      **/
-    private $username;
+    public $username;
 
     /**
      * @Column(name="password", type="string", length=64)
      **/
-    private $password;
+    public $password;
 
     /**
      * @Column(name="name", type="string", length=50)
      **/
-    private $name;
+    public $name;
 
     /**
      * @Column(name="gender", type="string", length=2)
      **/
-    private $gender;
+    public $gender;
 
     /**
      * @Column(name="college", type="string", length=20)
      **/
-    private $college;
+    public $college;
 
     /**
      * @Column(name="szuno", type="string", length=10)
      **/
-    private $szuno;
+    public $szuno;
 
     /**
      * @Column(name="card_id", type="string", length=6)
      **/
-    private $cardId;
+    public $cardId;
 
     /**
      * @Column(name="identity_number", type="string", length=18)
      **/
-    private $identityNumber;
+    public $identityNumber;
 
     /**
-     * @Column(name="rank_num", type="integer", length=2)
+     * @Column(name="rank_num", type="string", length=2)
      **/
-    private $rankNum;
+    public $rankNum;
 
     /**
      * @Column(name="email", type="string", length=150)
      **/
-    private $email;
+    public $email;
 
     /**
      * @Column(name="phone", type="string", length=11)
      **/
-    private $phone;
+    public $phone;
 
     /**
      * @Column(name="short_phone", type="string", length=11)
      **/
-    private $shortPhone;
+    public $shortPhone;
 
     /**
      * @Column(name="created", type="datetime")
@@ -121,73 +156,38 @@ class Account extends ModelBase {
     /**
      * @Column(name="token", type="string", length=64)
      **/
-    private $token;
+    public $token;
 
     /**
      * @Column(name="is_admin", type="boolean")
      **/
-    private $isAdmin;
+    public $isAdmin;
 
     /**
      * @Column(name="is_deleted", type="boolean")
      **/
-    private $isDeleted;
+    public $isDeleted;
 
-    public function getId() {
-        return $this->id;
+    static public function factory($value = array()) {
+        $account = new Account();
+        $account->username = $value['username'];
+        $account->setPassword($value['password']);
+        $account->name = $value['name'];
+        $account->college = $value['college'];
+        $account->gender = $value['gender'];
+        $account->szuno = $value['szuno'];
+        $account->cardId = $value['cardId'];
+        $account->identityNumber = $value['identityNumber'];
+        $account->rankNum = $value['rankNum'];
+        $account->email = $value['email'];
+        $account->phone = $value['phone'];
+        $account->shortPhone = $value['shortPhone'];
+        return $account;
     }
 
-    public function getUsername() {
-        return $this->username;
-    }
-
-    public function setUsername($username) {
-        $this->username = $username;
-    }
-
-    public function setPassword($raw, $salt) {
-        $hashPassword = User::hashPassword($raw, $salt);
+    public function setPassword($raw) {
+        $hashPassword = Account::hashPassword($raw, self::PASSWORD_SALT);
         $this->password = $hashPassword;
-    }
-
-    public function setName($name) {
-        $this->name = $name;
-    }
-
-    public function getName() {
-        return $this->name;
-    }
-
-    public function getEmail() {
-        return $this->email;
-    }
-
-    public function setEmail($email) {
-        $this->email = $email;
-    }
-
-    public function getPhone() {
-        return $this->phone;
-    }
-
-    public function setPhone($phone) {
-        $this->phone = $phone;
-    }
-
-    public function setIp($ip) {
-        $this->lastIP = $ip;
-    }
-
-    public function setLastLogin($datetime) {
-        $this->lastLogin = $datetime;
-    }
-
-    public function setToken($token) {
-        $this->token = $token;
-    }
-
-    public function getToken() {
-        return $this->token;
     }
 
     public function isActivity() {
@@ -204,8 +204,8 @@ class Account extends ModelBase {
         $this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-    public function checkPassword($rawPassword, $salt) {
-        $password = User::hashPassword($rawPassword, $salt);
+    public function checkPassword($rawPassword) {
+        $password = Account::hashPassword($rawPassword, self::PASSWORD_SALT);
         return ($this->password == $password);
     }
 
@@ -222,7 +222,8 @@ class Account extends ModelBase {
         $this->save();
     }
 
-    static public function hashPassword($password, $salt) {
+    static public function hashPassword($password) {
+        $salt = self::PASSWORD_SALT;
         $hash = md5("{$salt}{$password}{$salt}");
         return $hash;
     }
@@ -235,6 +236,14 @@ class Account extends ModelBase {
     static public function isExistBy($field, $value) {
         $query = static::query()->findOneBy(array($field => $value, 'isDeleted' => false));
         return $query != null;
+    }
+
+    static public function isExist($value) {
+        return self::isExistBy('username', $value);
+    }
+
+    static public function getRankName($rankNumber) {
+        return static::$RANK_NAME[$rankNumber];
     }
 
 }
