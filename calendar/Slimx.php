@@ -86,6 +86,20 @@ class Slimx extends \Slim\Slim {
         $this->webRoot = $root;
     }
 
+    public function flashArr($key, $value) {
+        if (isset($this->environment['slim.flash'])) {
+            $messages = $this->environment['slim.flash']->getMessages();
+
+            if (isset($messages[$key]))
+                $msg = $messages[$key];
+            else
+                $msg = array();
+
+            array_push($msg, $value);
+            $this->environment['slim.flash']->set($key, $msg);
+        }
+    }
+
     public function installApps($installedApps) {
         spl_autoload_register(array('Slimx', '__autoloader'));
         $this->installedApps = $installedApps;

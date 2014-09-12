@@ -4,6 +4,8 @@ namespace Controller;
 
 class BaseController {
 
+    const KEY_OF_MESSAGE = 'flashMsg';
+
     static protected $app;
     static protected $request;
 
@@ -53,6 +55,10 @@ class BaseController {
         $return = call_user_func_array(array(get_called_class(), 'delete'), func_get_args()); 
         self::after();
         return $return;
+    }
+
+    static protected function flash($message, $type = 'info') {
+        self::$app->flashArr(self::KEY_OF_MESSAGE, array($message, $type));
     }
 
     static protected function render($path, $args = array(), $status = null) {
