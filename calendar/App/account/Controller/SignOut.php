@@ -7,6 +7,9 @@ class SignOut extends \Controller\BaseController {
     static public $url = '/account/signout';
 
     static public function get() {
-        return self::render('account/signout.html', get_defined_vars());
+        self::$app->deleteCookie('userid');
+        self::$app->deleteCookie('token');
+        self::flash('退出成功', 'info');
+        self::redirect(self::urlFor('account.sign_in[get]'));
     }
 }

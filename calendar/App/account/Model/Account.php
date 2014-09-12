@@ -187,7 +187,7 @@ class Account extends ModelBase {
         $ip = $app->request->getIp();
         $token = \Extension\Encryption::generateToken($ip, $now, self::TOKEN_SALT);
         $this->token = $token;
-        $this->ip = $ip;
+        $this->lastIP = $ip;
         $this->lastLogin = $now;
         $this->save();
         Account::flush();
