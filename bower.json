@@ -1,8 +1,22 @@
 {
-    "name": "Shenzhen University Calendar",
-    "version": "1",
-    "dependencies": {
-        "bootstrap": "3.1",
-        "jquery-ui": "1.10.3"
-    }
+  "name": "szu-calendar",
+  "version": "0.1.",
+  "homepage": "https://github.com/shonenada/szu-calendar",
+  "authors": [
+    "shonenada <shonenada@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "wwwroot/static/components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery-validation": "~1.13.0",
+    "jquery": "1.9",
+    "normalize.css": "~3.0.1"
+  }
 }
