@@ -433,6 +433,7 @@ button.close {
   margin: 0 auto;
   margin-top: 20px;
   font-size: 14px;
+  z-index: 9999;
 }
 .flash-message-fixed {
   position: fixed;
