@@ -114,17 +114,18 @@ class Slimx extends \Slim\Slim {
     // 注册控制器方法，将 php 控制注册到 app 内部，并安装控制器。
     public function registerController ($controller, $moduleName) {
         $vars = get_class_vars($controller);
-
-        if (!$vars) {
+        if (!$vars)
             return ;
-        }
 
-        if (!array_key_exists('url', $vars)) {
+        if (!array_key_exists('url', $vars)) 
             return ;
-        }
 
-        $resource = $url = preg_replace('/\/+/', '/', $vars['url']);
+        $this->_saveRoute($controller, $moduleName, $vars);
+        $this->_savePermission($vars);
+    }
 
+    private function _saveRoute($controller, $moduleName, $vars) {
+        $url = preg_replace('/\/+/', '/', $vars['url']);
         if (array_key_exists('name', $vars)) {
             $name = $vars['name'];
         } else {
@@ -149,7 +150,10 @@ class Slimx extends \Slim\Slim {
                 $resource = str_replace($key, $value, $resource);
             }
         }
+    }
 
+    private function _savePermission($vars) {
+        $resource = preg_replace('/\/+/', '/', $vars['url']);
         $resource = $this->request->getRootUri() . preg_replace('/:[^\/]+/', '\S+', $resource);
 
         if (array_key_exists('allow', $vars)) {
@@ -171,7 +175,6 @@ class Slimx extends \Slim\Slim {
                 }
             }
         }
-
     }
 
 }
