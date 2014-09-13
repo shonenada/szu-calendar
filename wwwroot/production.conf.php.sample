@@ -1,0 +1,12 @@
+<?php
+
+return array(
+    // 开启调试模式，显示网站运行错误，生产环境请关闭调试模式。
+    "debug" => false,
+    // 设置当前运行模式为 开发模式，生产环境请使用 'production'
+    "mode" => 'production',
+    // Cookie 密钥，请使用随机数生成器生成。
+    'cookies.secret_key' => '12345689-',
+    
+    'webRoot' => '/',
+);

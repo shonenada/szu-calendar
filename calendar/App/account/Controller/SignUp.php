@@ -5,6 +5,10 @@ namespace Controller;
 class SignUp extends \Controller\BaseController {
 
     static public $url = '/account/signup';
+    static public $allow = array(
+        'GET' => array('Guest',),
+        'POST' => array('Guest',),
+    );
 
     static public function get() {
 

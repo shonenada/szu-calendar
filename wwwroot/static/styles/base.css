@@ -1,7 +1,7 @@
 body {
   color: #333;
   font-family: 'Microsoft Yahei';
-  background-image: url(/static/images/bg.png);
+  background-image: url(../images/bg.png);
 }
 a {
   color: #444;
@@ -114,3 +114,5 @@ a {
   border-top: 1px solid rgba(0,0,0,.1);
   background: rgba(248,248,248,.9);
 }
+
+

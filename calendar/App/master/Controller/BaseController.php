@@ -11,13 +11,6 @@ class BaseController {
     static protected $currentUser;
     static private $injectedArgs = array();
 
-    static public $allow = array(
-        'GET' => array('EveryOne',),
-        'POST' => array('EveryOne',),
-        'PUT' => array('EveryOne',),
-        'DELETE' => array('EveryOne',),
-    );
-
     static public function before() {}
 
     static public function after() {}
@@ -85,6 +78,11 @@ class BaseController {
 
     static public function redirectIfSignIned($url, $status = 302) {
         if (self::$currentUser)
+            return self::redirect($url, $status);
+    }
+
+    static public function signInRequired($url, $status = 302) {
+        if (!self::$currentUser)
             return self::redirect($url, $status);
     }
 

@@ -7,8 +7,8 @@ class SignIn extends \Controller\BaseController {
 
     static public $url = '/account/signin';
     static public $allow = array(
-        'GET' => array('EveryOne',),
-        'POST' => array('EveryOne',),
+        'GET' => array('Guest',),
+        'POST' => array('Guest',),
     );
 
     static public function get() {

@@ -101,6 +101,7 @@ class ViewFunctionExtension extends \Twig_Extension {
             }
             $uri = $req->getUrl() . $uri;
         }
+        $uri = \Slim\Slim::getInstance()->config('webRoot') . $uri;
         return $uri;
     }
 

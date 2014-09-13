@@ -2,14 +2,14 @@
 
 namespace Controller;
 
-class Profile extends \Controller\BaseController {
+class Dashboard extends \Controller\BaseController {
 
-    static public $url = '/account/profile';
+    static public $url = '/dashboard';
     static public $allow = array(
         'GET' => array('Undergraduate', 'Graduate', 'Teacher', 'Administrator'),
     );
 
     static public function get() {
-        return self::render('account/profile.html', get_defined_vars());
+        return self::render('dashboard/index.html', get_defined_vars());
     }
 }

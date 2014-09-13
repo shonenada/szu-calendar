@@ -11,7 +11,7 @@ class Slimx extends \Slim\Slim {
 
     protected $installedApps = array();
     protected $permissions = array();
-    protected $auth = null;
+    public $auth = null;
 
     public function __construct(array $userSettings = array()) {
         parent::__construct($userSettings);

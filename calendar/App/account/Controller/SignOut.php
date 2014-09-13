@@ -5,6 +5,9 @@ namespace Controller;
 class SignOut extends \Controller\BaseController {
 
     static public $url = '/account/signout';
+    static public $allow = array(
+        'GET' => array('Undergraduate', 'Graduate', 'Teacher', 'Administrator'),
+    );
 
     static public function get() {
         self::$app->deleteCookie('userid');

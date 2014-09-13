@@ -5,6 +5,9 @@ namespace Controller;
 class CAS extends \Controller\BaseController {
 
     static public $url = '/account/cas';
+    static public $allow = array(
+        'GET' => array('Guest',),
+    );
 
     static private function RegexLog($xmlString, $subStr) {
         $pattern = sprintf("/<cas:%s>(.*)<\/cas:%s>/i", $subStr, $subStr);
