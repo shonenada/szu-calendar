@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block body_class %}id="profile"{% endblock %}
+
+{% block htmlhead %}
+{{ renderCss('styles/account.css') | raw }}
+{% endblock %}
+
+{% block body %}
+<div id="main">
+  <div class="align-center">
+    <h2>欢迎登录</h2>
+    <p>
+      <a href="{{ urlFor('master.dashboard[get]') }}">控制面板</a>
+      <a href="{{ urlFor('account.sign_out[get]') }}">退出</a>
+    </p>
+  </div>
+</div>
+{% endblock %}
+{% block bodyfoot %}
+{% endblock %}

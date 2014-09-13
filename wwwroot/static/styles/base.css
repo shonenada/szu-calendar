@@ -7,6 +7,11 @@ a {
   color: #444;
   text-decoration: none;
 }
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
 .with-transition,
 .with-transition:hover {
   -webkit-transition: 0.25s;

@@ -19,6 +19,7 @@ class SignUp extends \Controller\BaseController {
         $name = $_SESSION['cas']['Pname'];
         $gender = $_SESSION['cas']['SexName'];
         $szuno = $_SESSION['cas']['StudentNo'];
+        $rankNum = $_SESSION['cas']['RankName'];
 
         $account = new \Model\Account();
 

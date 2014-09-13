@@ -1,0 +1,75 @@
+{% import 'tools.twig' as tools %}
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>{% if webTitle %}{{ webTitle }}{% else %}{{ siteTitle }}{% endif %}</title>
+    <meta name="keyword" content="{{ siteKeyword }}" />
+    <meta name="description" content="{{ siteDescription }}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    {{ renderJs('components/jquery/dist/jquery.min.js') | raw }}
+    {{ renderCss('components/normalize.css/normalize.css') | raw }}
+    {{ renderCss('styles/base.css') | raw }}
+    {{ renderCss('styles/dashboard.css') | raw }}
+    {{ renderCss('font/font-awesome.min.css') | raw }}
+    <!--[if IE 7]>
+    {{ renderCss('font/font-awesome-ie7.min.css') | raw }}
+    <![endif]-->
+    {% block htmlhead %}
+    {% endblock %}
+  </head>
+  <body {% block body_class %}{% endblock %}>
+  {% include 'flash_message.html.inc' %}
+  {% block body %}
+  <div id="header">
+    <div class="pull-left">
+      <a href="{{ urlFor('master.dashboard[get]') }}">Reservation</a>
+    </div>
+    <div class="pull-right">
+      {{ user.username }}
+    </div>
+  </div>
+
+  <div id="main">
+    <div id="aside">
+      <div class="aside-topbar">欢迎使用</div>
+      <ul class="nav-list">
+        <li><a href="{{ urlFor('master.dashboard[get]') }}">控制台</a></li>
+        <li><a href="{{ urlFor('calendar.calendar[get]') }}">日程安排</a></li>
+        <li><a href="{{ urlFor('account.profile[get]') }}">用户管理</a></li>
+      </ul>
+    </div>
+    <div id="content">
+      <div class="nav-topbar">
+        <ul class="breadcrumbs">
+          <li><i class="icon icon-home"></i> <a href="{{ urlFor('master.dashboard[get]') }}">控制面板</a></li>
+          {% block breadcrumbs %}
+          {% endblock %}
+        </ul>
+      </div>
+    {% block content %}
+      <div class="content-container">
+        <div class="content-header">
+          {% block content_header %}{% endblock %}
+        </div>
+        <div class="content-body">
+          {% block content_body %}{% endblock %}
+        </div>
+      </div>
+    {% endblock %}
+    </div>
+  </div>
+  {% endblock %}
+  <script>
+    $('.nav-list').children('li').each(function(){
+      var liObj = $(this);
+      if (liObj.children('a').attr('href') == window.location.pathname) {
+        liObj.addClass('active');
+      }
+    });
+  </script>
+  {% block bodyfoot %}
+  {% endblock %}
+  </body>
+</html>

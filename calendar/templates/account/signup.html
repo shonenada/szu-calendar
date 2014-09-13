@@ -40,7 +40,7 @@
             <input type="text" value="{{ gender }}" disabled="disabled" />
           </div>
           <div class="form-field">
-            <label class="label">学号*</label>
+            <label class="label">{% if rankNum == '05' %}教工号{% else %}学号{% endif %}*</label>
             <input type="text" value="{{ szuno }}" disabled="disabled" />
           </div>
         </div>
