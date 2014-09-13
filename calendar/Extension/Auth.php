@@ -9,11 +9,13 @@ class Auth {
             $uid = $app->getCookie("userid");
             $ip = $app->request->getIp();
             $token = $app->getCookie("token");
-            if (empty($uid)){
+            if (empty($uid)) {
                 $user = null;
-            }else {
+            } else {
                 $user = \Model\Account::find($uid);
                 if ($user && !($user->validateToken($token) && $user->validateIp($ip))) {
+                    $app->deleteCookie('userid');
+                    $app->deleteCookie('token');
                     $user = null;
                 }
             }
