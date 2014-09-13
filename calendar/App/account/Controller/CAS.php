@@ -6,7 +6,7 @@ class CAS extends \Controller\BaseController {
 
     static public $url = '/account/cas';
     static public $allow = array(
-        'GET' => array('Guest',),
+        'GET' => array('Guest'),
     );
 
     static private function RegexLog($xmlString, $subStr) {
@@ -38,8 +38,9 @@ class CAS extends \Controller\BaseController {
             $identityNumber = $_SESSION['cas']['PersonalId'] = self::RegexLog($xmlString, "PersonalId");
             $rankNum = $_SESSION['cas']['RankName'] = self::RegexLog($xmlString, "RankName");
 
-            $isSzunoExist = \Model\Account::isExistBy('szuno', $szuno);
-            if ($isSzunoExist) {
+            $account = \Model\Account::getBy('szuno', $szuno);
+            if ($account) {
+                $account->login(self::$app);
                 return self::redirect(self::urlFor('account.profile[get]'));
             } else {
                 return self::redirect(self::urlFor('account.sign_up[get]'));

@@ -245,7 +245,7 @@ class Account extends ModelBase {
     }
 
     static public function authenticate($username, $password) {
-        $account = self::getByUsername($username);
+        $account = self::getBy('username', $username);
         if (!$account) {
             return false;
         }
@@ -264,18 +264,14 @@ class Account extends ModelBase {
         return $hash;
     }
 
-    static public function getByUsername($username) {
-        $query = static::query()->findOneBy(array('username' => $username, 'isDeleted' => false));
+    static public function getBy($key, $value) {
+        $query = static::query()->findOneBy(array($key => $value, 'isDeleted' => false));
         return $query;
     }
 
     static public function isExistBy($field, $value) {
         $query = static::query()->findOneBy(array($field => $value, 'isDeleted' => false));
         return $query != null;
-    }
-
-    static public function isExist($value) {
-        return self::isExistBy('username', $value);
     }
 
     static public function getRankName($rankNumber) {
