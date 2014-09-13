@@ -19,7 +19,7 @@ class BaseController {
         $app = self::$app = \Slim\Slim::getInstance();
         $request = self::$request = $app->request;
         $user = self::$currentUser = self::getCurrentUser();
-        $injectedArgs['user'] = $user;
+        self::$injectedArgs['user'] = $user;
     }
 
     static public function getCurrentUser() {
@@ -67,8 +67,8 @@ class BaseController {
     }
 
     static protected function render($path, $args = array(), $status = null) {
-        $args = array_merge($args, self::$injectedArgs);
-        return self::$app->render($path, $args, $status);
+        $renderArgs = array_merge($args, self::$injectedArgs);
+        return self::$app->render($path, $renderArgs, $status);
     }
 
     static public function redirect($url, $status = 302) {
