@@ -9,7 +9,6 @@
 
 class Slimx extends \Slim\Slim {
 
-    protected $webRoot = '/';
     protected $installedApps = array();
     protected $permissions = array();
     protected $auth = null;
@@ -82,10 +81,6 @@ class Slimx extends \Slim\Slim {
         });
     }
 
-    public function setRoot($root) {
-        $this->webRoot = $root;
-    }
-
     public function flashArr($key, $value) {
         if (isset($this->environment['slim.flash'])) {
             $messages = $this->environment['slim.flash']->getMessages();
@@ -128,7 +123,8 @@ class Slimx extends \Slim\Slim {
             return ;
         }
 
-        $resource = $url = preg_replace('/\/+/', '/', $this->webRoot . $vars['url']);
+        $resource = $url = preg_replace('/\/+/', '/', $vars['url']);
+
         if (array_key_exists('name', $vars)) {
             $name = $vars['name'];
         } else {
@@ -154,7 +150,7 @@ class Slimx extends \Slim\Slim {
             }
         }
 
-        $resource = preg_replace('/:[^\/]+/', '\S+', $resource);
+        $resource = $this->request->getRootUri() . preg_replace('/:[^\/]+/', '\S+', $resource);
 
         if (array_key_exists('allow', $vars)) {
             foreach ($vars['allow'] as $method => $roles) {
