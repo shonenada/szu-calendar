@@ -213,6 +213,16 @@ class Account extends ModelBase {
         return ($this->password == $password);
     }
 
+    public function hasPerm($routeName) {
+        $app = \Slim\Slim::getInstance();
+        $resource = $app->urlFor($routeName);
+        $matched = preg_match('/\[(\S+)\]/', $routeName, $match);
+        if (!$matched)
+            return false;
+        $method = $match[1];
+        return $app->auth->accessiable($this, $resource, $method);
+    }
+
     public function validateToken($token) {
         return $this->token == $token;
     }

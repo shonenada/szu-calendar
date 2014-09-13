@@ -2,6 +2,19 @@ body {
   background: #FFF;
 }
 
+.mash{
+  background: rgba(0, 0, 0, 0.7);
+  filter: progid:DXImageTransform.Microsoft.gradient(startcolorstr=#AF000000,endcolorstr=#AF000000);
+  -pie-background:rgba(0, 0, 0, .7);
+  z-index: 5000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+
 .icon {
   font-size: 20px;
 }
@@ -142,11 +155,49 @@ body {
 
 .content-header {
   padding: 10px 20px;
-  border-bottom: 1px solid #CCC;
+  border-bottom: 1px solid #ccc;
   font-size: 24px;
   color: #2679b5;
 }
 
 .content-body {
   padding: 20px 0;
+}
+
+.dialog {
+  z-index: 8000;
+  position: fixed;
+  top: 40px;
+  width: 600px;
+  left: 50%;
+  margin-left: -300px;
+  display: none;
+  background: #FFF;
+}
+
+.dialog-title {
+  font-weight: bold;
+  font-size: 20px;
+  border-bottom: 1px solid #d5d5d5;
+  padding: 20px;
+}
+
+.dialog-content {
+  padding: 20px 30px;
+  line-height: 2.5em;
+}
+
+.dialog-foot {
+  background: #eff3f8;
+  height: 70px;
+  line-height: 55px;
+  border-top: 1px solid #d5d5d5;
+  padding: 0 20px;
+}
+span.datetime-format {
+  color: #BC0000;
+  border-radius: 3px;
+  background: #E0E0E0;
+  padding: 3px 5px;
+  margin: 3px;
 }

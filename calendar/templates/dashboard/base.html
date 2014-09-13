@@ -8,7 +8,7 @@
     <meta name="keyword" content="{{ siteKeyword }}" />
     <meta name="description" content="{{ siteDescription }}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    {{ renderJs('components/jquery/dist/jquery.min.js') | raw }}
+    {{ renderJs('components/jquery/jquery.min.js') | raw }}
     {{ renderCss('components/normalize.css/normalize.css') | raw }}
     {{ renderCss('styles/base.css') | raw }}
     {{ renderCss('styles/styles.css') | raw }}
@@ -37,8 +37,15 @@
       <div class="aside-topbar">欢迎使用</div>
       <ul class="nav-list">
         <li><a href="{{ urlFor('master.dashboard[get]') }}">控制台</a></li>
+        {% if user.hasPerm('agenda.publish_free_time[get]') %}
+        <li><a href="{{ urlFor('agenda.publish_free_time[get]') }}">发布空闲时段</a></li>
+        {% endif %}
+        {% if user.hasPerm('agenda.view_mine[get]') %}
+        <li><a href="{{ urlFor('agenda.view_mine[get]') }}">查看预约</a></li>
+        {% endif %}
         <li><a href="{{ urlFor('calendar.calendar[get]') }}">日程安排</a></li>
         <li><a href="{{ urlFor('account.profile[get]') }}">个人信息</a></li>
+        <li><a href="{{ urlFor('account.sign_out[get]') }}">退出系统</a></li>
       </ul>
     </div>
     <div id="content">

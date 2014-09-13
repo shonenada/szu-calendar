@@ -9,6 +9,7 @@
 $installedApps = array (
     'master',
     'account',
+    'agenda',
     'calendar',
 );
 

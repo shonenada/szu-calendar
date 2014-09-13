@@ -1,0 +1,78 @@
+{% extends 'dashboard/base.html' %}
+
+{% block htmlhead %}
+{{ renderCss('styles/fullcalendar.min.css') | raw }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<li>发布空闲时段</li>
+{% endblock %}
+
+{% block content_header %}  发布空闲时段  {% endblock %}
+
+
+{% block content_body %}
+<div id="calendar"></div>
+<div class="pull-right" style="margin-bottom: 20px;">
+  <button type="button" class="btn btn-success" id="saveAgenda">保存</button>
+</div>
+{% endblock %}
+
+{% block bodyfoot %}
+{{ renderJs('scripts/plugins/moment.min.js') | raw }}
+{{ renderJs('scripts/plugins/fullcalendar.min.js') | raw }}
+{{ renderJs('scripts/plugins/fullcalendar.lang.zh-cn.js') | raw }}
+<script type="text/javascript">
+$(function() {
+  var dateTime = [];
+  var saveDateTime = function(start, end) {
+    dateTime.push({start: start.format('YYYY-MM-DD hh:mm:ss'), end: end.format('YYYY-MM-DD hh:mm:ss')});
+  }
+  var date = new Date();
+  var d = date.getDate();
+  var m = date.getMonth();
+  var y = date.getFullYear();
+  var calendar = $('#calendar').fullCalendar({
+    lang: 'zh-cn',
+    header: {
+      left: 'prev,next',
+      center: 'title',
+      right: 'today',
+    },
+    allDaySlot: false,
+    minTime: '08:00:00',
+    maxTime: '18:00:00',
+    slotDuration: '00:15:00',
+    defaultView: 'agendaWeek',
+    defaultDate: y + '-' + (m+1) + '-' + d,
+    editable: true,
+    eventLimit: false,
+    selectable: true,
+    selectHelper: true,
+    events: [],
+    select: function(start, end, allDay) {
+      var eventData = {
+        start: start,
+        end: end
+      };
+      $('#calendar').fullCalendar('renderEvent', eventData, true); // stick? = true
+      $('#calendar').fullCalendar('unselect');
+      saveDateTime(start, end);
+    },
+    eventClick: function (calEvent, jsEvent, view) {
+      var isDelete = confirm('删除空闲时段？');
+      if (isDelete) {
+        calendar.fullCalendar('removeEvents' , function(ev){
+          return (ev._id == calEvent._id);
+        })
+      }
+    },
+  });
+  $('#saveAgenda').click(function (){
+    $.post('{{ urlFor("agenda.publish_free_time[post]") }}', {dateTime: dateTime}, function(res) {
+      console.log(res);
+    }, 'json');
+  });
+});
+</script>
+{% endblock %}
