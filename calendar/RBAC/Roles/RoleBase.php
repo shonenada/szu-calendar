@@ -3,11 +3,10 @@
 namespace RBAC\Roles;
 use RBAC\Role;
 
-class EveryOne implements Role {
+class RoleBase implements Role {
 
     private static $instance = null;
-    protected $roleName = "EveryOne";
-    protected $parentName = null;
+    protected $roleName = null;
 
     public static function getInstance() {
         if (!isset(self::$instance) || self::$instance == null) {
@@ -21,12 +20,8 @@ class EveryOne implements Role {
         return $this->roleName;
     }
 
-    public function getParentName() {
-        return $this->parentName;
-    }
-
     public function authenticate(\Model\Account $user=null) {
-        return true;
+        return false;
     }
 
 }

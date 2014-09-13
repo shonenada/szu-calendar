@@ -20,7 +20,8 @@ class Auth {
             $resource = $app->request->getPath();
             $method = $app->request->getMethod();
             if (!$app->accessiable($user, $resource, $method)) {
-                $app->redirect($app->urlFor('master.error-403[get]'));
+                $app->redirect($app->urlFor('account.sign_in[get]'));
+                // $app->redirect($app->urlFor('master.error-403[get]'));
             }
         });
     }
