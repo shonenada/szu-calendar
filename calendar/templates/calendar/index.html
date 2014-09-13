@@ -1,0 +1,45 @@
+{% extends 'dashboard/base.html' %}
+
+{% block htmlhead %}
+{{ renderCss('styles/fullcalendar.min.css') | raw }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<li>日程安排</li>
+{% endblock %}
+
+{% block content_header %}
+日程管理
+{% endblock %}
+
+
+{% block content_body %}
+<div id="calendar"></div>
+{% endblock %}
+
+{% block bodyfoot %}
+{{ renderJs('scripts/plugins/moment.min.js') | raw }}
+{{ renderJs('scripts/plugins/fullcalendar.min.js') | raw }}
+{{ renderJs('scripts/plugins/fullcalendar.lang.zh-cn.js') | raw }}
+<script type="text/javascript">
+$(function(){
+    $('#calendar').fullCalendar({
+      header: {
+        left: 'prev,next',
+        center: 'title',
+        right: 'today',
+      },
+      defaultView: 'agendaWeek',
+      lang: 'zh-cn',
+      defaultDate: '2014-09-12',
+      selectable: true,
+      selectHelper: true,
+      slotDuration: '00:15:00',
+      editable: false,
+      eventLimit: false,
+      events: []
+    });
+    
+  });
+</script>
+{% endblock %}
