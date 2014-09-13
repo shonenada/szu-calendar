@@ -5,8 +5,8 @@ use RBAC\Role;
 
 class Guest extends RoleBase {
 
-    private static $instance = null;
     protected $roleName = "Guest";
+    protected static $instance = null;
 
     public function authenticate(\Model\Account $user=null) {
         return true;

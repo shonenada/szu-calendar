@@ -5,12 +5,12 @@ use RBAC\Role;
 
 class RoleBase implements Role {
 
-    private static $instance = null;
+    protected static $instance = null;
     protected $roleName = null;
 
     public static function getInstance() {
-        if (!isset(self::$instance) || self::$instance == null) {
-            $class = get_called_class();
+        $class = get_called_class();
+        if (!isset($class::$instance) || $class::$instance == null) {
             self::$instance = new $class();
         }
         return self::$instance;

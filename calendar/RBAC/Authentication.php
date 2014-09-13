@@ -4,7 +4,7 @@ namespace RBAC;
 
 class Authentication{
 
-    private $ptable = array();
+    public $ptable = array();
     private $redirect = array();
 
     public function allow(Role $role, $resource, $method){
