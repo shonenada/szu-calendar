@@ -22,16 +22,14 @@ require(PKGROOT . "autoload.php");
 // 加载 app 工厂函数
 require_once(APPROOT . "app.php");
 
-
 // 设置配置文件。
 $configs = array();
 
 if (is_file(WEBROOT . 'production.conf.php')) {
-    $configs[] = 'production.conf.php';
+    $configs[] = (WEBROOT . 'production.conf.php');
 }else if (is_file(WEBROOT . 'development.conf.php')) {
-    $configs[] = 'development.conf.php';
+    $configs[] = (WEBROOT . 'development.conf.php');
 }
-
 
 // 创建 app
 $app = createApp($configs);
