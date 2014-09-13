@@ -1,20 +1,90 @@
-{% extends 'base.html' %}
-{% block body_class %}id="profile"{% endblock %}
+{% extends 'dashboard/base.html' %}
 
-{% block htmlhead %}
-{{ renderCss('styles/account.css') | raw }}
+{% block breadcrumbs %}
+<li>个人信息</li>
 {% endblock %}
 
-{% block body %}
-<div id="main">
-  <div class="align-center">
-    <h2>欢迎登录</h2>
-    <p>
-      <a href="{{ urlFor('master.dashboard[get]') }}">控制面板</a>
-      <a href="{{ urlFor('account.sign_out[get]') }}">退出</a>
-    </p>
+{% block content_header %}
+个人信息
+{% endblock %}
+
+{% block content_body %}
+<form method="post" action="{{ urlFor('account.profile[post]') }}" id="signup-form" class="style-form">
+<div id="signup-box" class="box-with-border">
+  <div id="signup-box-header" class="box-header">修改信息</div>
+    <div id="signup-fieldset" class="box-body">
+      <div class="form-field">
+        <label class="label">用户名*</label>
+        <input type="text" name="username" placeholder="用户名" value="{{ user.username }}" {% if user.username %}disabled="disabled"{% endif %}/>
+      </div>
+      <div class="form-field">
+        <label class="label">邮箱</label>
+        <input type="text" name="email" placeholder="邮箱" value="{{ user.email }}" />
+      </div>
+      <div class="form-field">
+        <label class="label">手机号码（长号）</label>
+        <input type="text" name="phone" placeholder="长号" value="{{ user.phone }}"/>
+      </div>
+      <div class="form-field">
+        <label class="label">深大短号</label>
+        <input type="text" name="shortPhone" placeholder="短号" value="{{ user.shortPhone }}"/>
+      </div>
+      <div class="form-field">
+        <label class="label">姓名*</label>
+        <input type="text" disabled="disabled" value="{{ user.name }}"/>
+      </div>
+      <div class="form-field">
+        <label class="label">性别*</label>
+        <input type="text" disabled="disabled" value="{{ user.gender }}"/>
+      </div>
+      <div class="form-field">
+        <label class="label">{% if rankNum == '05' %}教工号{% else %}学号{% endif %}*</label>
+        <input type="text" disabled="disabled" value="{{ user.szuno }}"/>
+      </div>
+    </div>
+  <div id="signup-box-footer" class="box-footer align-right">
+    <button type="submit" class="btn btn-primary">修改</button>
   </div>
 </div>
+</form>
 {% endblock %}
+
+
 {% block bodyfoot %}
+{{ renderJs('components/jquery-validation/dist/jquery.validate.min.js') | raw }}
+{{ tools.formErrors(errors) }}
+<script>
+$(function() {
+  $("#signup-form").validate({
+    rules: {
+      email: {
+        required: false,
+        email: true
+      },
+      phone: {
+        required: false,
+        digits: true,
+      },
+      shortPhone: {
+        required: false,
+        digits: true,
+        rangelength: [3, 6],
+      }
+    },
+    messages : {
+      email: {
+        email: '邮箱格式不正确',
+      },
+      phone: {
+        digits: '请填写正确的长号',
+        rangelength: '请填写正确的长号',
+      },
+      shortPhone: {
+        digits: '请填写正确的短号',
+        rangelength: '请填写正确的短号',
+      }
+    },
+  });
+});
+</script>
 {% endblock %}

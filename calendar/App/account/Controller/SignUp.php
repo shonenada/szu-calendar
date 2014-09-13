@@ -67,7 +67,7 @@ class SignUp extends \Controller\BaseController {
             ->rule('password', 'min_length', array(':value', 6))
             ->rule('password', 'max_length', array(':value', 20))
 
-            ->label('email', '密码')
+            ->label('email', '邮箱')
             ->rule('email', 'email')
 
             ->label('phone', '长号')

@@ -11,6 +11,7 @@
     {{ renderJs('components/jquery/dist/jquery.min.js') | raw }}
     {{ renderCss('components/normalize.css/normalize.css') | raw }}
     {{ renderCss('styles/base.css') | raw }}
+    {{ renderCss('styles/styles.css') | raw }}
     {{ renderCss('styles/dashboard.css') | raw }}
     {{ renderCss('font/font-awesome.min.css') | raw }}
     <!--[if IE 7]>
@@ -37,7 +38,7 @@
       <ul class="nav-list">
         <li><a href="{{ urlFor('master.dashboard[get]') }}">控制台</a></li>
         <li><a href="{{ urlFor('calendar.calendar[get]') }}">日程安排</a></li>
-        <li><a href="{{ urlFor('account.profile[get]') }}">用户管理</a></li>
+        <li><a href="{{ urlFor('account.profile[get]') }}">个人信息</a></li>
       </ul>
     </div>
     <div id="content">
