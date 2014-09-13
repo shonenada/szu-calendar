@@ -27,7 +27,7 @@
     </div>
   </form>
   <div class="align-center">
-    <a href="https://auth.szu.edu.cn/cas.aspx/signin?service=http://ias.szu.edu.cn/account/cas" class="btn btn-large-width btn-success">深圳大学统一认证登录</a>
+    <a href="https://auth.szu.edu.cn/cas.aspx/signin?service=http://ias.szu.edu.cn{{ urlFor('account.cas[get]') }}" class="btn btn-large-width btn-success">深圳大学统一认证登录</a>
   </div>
 </div>
 {% endblock %}

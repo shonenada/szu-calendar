@@ -10,7 +10,7 @@
   <div class="align-center">
     <h2>请使用深圳大学统一认证接口注册</h2>
     <p>
-      <a href="https://auth.szu.edu.cn/cas.aspx/signin?service=http://ias.szu.edu.cn/account/cas" class="btn btn-large-width btn-huge btn-success">深圳大学统一认证登录</a>
+      <a href="https://auth.szu.edu.cn/cas.aspx/signin?service=http://ias.szu.edu.cn{{ urlFor('account.cas[get]') }}" class="btn btn-large-width btn-huge btn-success">深圳大学统一认证登录</a>
     </p>
     <p>
       <a href="{{ urlFor('account.sign_in[get]') }}">返回</a>
