@@ -41,10 +41,22 @@ class CAS extends \Controller\BaseController {
             $account = \Model\Account::getBy('szuno', $szuno);
             if ($account) {
                 $account->login(self::$app);
-                return self::redirect(self::urlFor('account.profile[get]'));
             } else {
-                return self::redirect(self::urlFor('account.sign_up[get]'));
+                $accountData = array(
+                    'name' => $_SESSION['cas']['Pname'],
+                    'college' => $_SESSION['cas']['OrgName'],
+                    'gender' => $_SESSION['cas']['SexName'],
+                    'szuno' => $_SESSION['cas']['StudentNo'],
+                    'cardId' => $_SESSION['cas']['ICAccount'],
+                    'identityNumber' => $_SESSION['cas']['PersonalId'],
+                    'rankNum' => $_SESSION['cas']['RankName'],
+                );
+                $account = \Model\Account::factory($accountData);
+                $account->save();
+                \Model\Account::flush();
+                $account->login(self::$app);
             }
+            return self::redirect(self::urlFor('account.sign_up[get]'));
         } else {
             return self::render('account/cas.html');
         }
