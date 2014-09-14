@@ -166,6 +166,11 @@ class Account extends ModelBase {
     public $isAdmin;
 
     /**
+     * @OneToMany(targetEntity="Calendar", mappedBy="teacher")
+     **/
+    public $calendars;
+
+    /**
      * @Column(name="is_active", type="boolean")
      **/
     public $isActive;
@@ -179,7 +184,7 @@ class Account extends ModelBase {
         $this->isActive = true;
         $this->isAdmin = false;
         $this->isDeleted = false;
-        $this->permissions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->calendars = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     public function login($app) {

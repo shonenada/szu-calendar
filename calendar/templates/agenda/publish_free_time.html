@@ -12,6 +12,18 @@
 
 
 {% block content_body %}
+<div class="mash"></div>
+<div class="dialog">
+  <div class="dialog-title">
+    <span class="dialog-title-content"></span>
+    <div class="pull-right">
+      <a href="javascript:void(0);" class="dialog-btn-close">
+        <i class="icon icon-remove"></i>
+      </a>
+    </div>
+  </div>
+  <div class="dialog-content"></div>
+</div>
 <div id="calendar"></div>
 <div class="pull-right" style="margin-bottom: 20px;">
   <button type="button" class="btn btn-success" id="saveAgenda">保存</button>
@@ -24,32 +36,76 @@
 {{ renderJs('scripts/plugins/fullcalendar.lang.zh-cn.js') | raw }}
 <script type="text/javascript">
 $(function() {
-  var dateTime = [];
+
+  var showDialog = function(title, content) {
+    $('.dialog-title-content').html(title);
+    $('.dialog-content').html(content);
+    $('.dialog').fadeIn();
+    $('.mash').fadeIn();
+  }
+  var hideDialog = function() {
+    $('.dialog').fadeOut();
+    $('.mash').fadeOut();
+  }
+  $('.dialog-btn-close').click(function(){
+    hideDialog();
+  });
+
+  var freeTime = [];
+  var deleteTime = [];
   var saveDateTime = function(start, end) {
-    dateTime.push({start: start.format('YYYY-MM-DD hh:mm:ss'), end: end.format('YYYY-MM-DD hh:mm:ss')});
+    freeTime.push({start: start.format('YYYY-MM-DD hh:mm:ss'), end: end.format('YYYY-MM-DD hh:mm:ss')});
   }
   var date = new Date();
   var d = date.getDate();
   var m = date.getMonth();
   var y = date.getFullYear();
   var calendar = $('#calendar').fullCalendar({
+    firstDay: 0,
+    weekends: false,
     lang: 'zh-cn',
     header: {
-      left: 'prev,next',
+      left: 'prev,next,today',
       center: 'title',
-      right: 'today',
+      right: 'month,agendaWeek',
     },
     allDaySlot: false,
     minTime: '08:00:00',
     maxTime: '18:00:00',
     slotDuration: '00:15:00',
     defaultView: 'agendaWeek',
-    defaultDate: y + '-' + (m+1) + '-' + d,
+    defaultDate: y + '-' + (m+1) + '-' + (d+1),
     editable: true,
     eventLimit: false,
     selectable: true,
     selectHelper: true,
-    events: [],
+    events: function (start, end, timezone, callback) {
+      var timer;
+      $.ajax({
+        url: "{{ urlFor('agenda.free_time_json[get]') }}",
+        type: 'get',
+        dataType: 'json',
+        data: {
+          start: start.unix(),
+          end: end.unix(),
+        },
+        beforeSend: function(){
+          timer = setTimeout(function(){
+            showDialog('数据加载中', '数据加载中，请耐心等候..');
+          }, 800);
+        },
+        success: function(res) {
+          callback(res);
+          clearTimeout(timer);
+          hideDialog();
+        },
+        error: function(res) {
+          $G.flash.flash('服务器发生错误，请联系管理员', 'danger');
+          clearTimeout(timer);
+          hideDialog();
+        }
+      });
+    },
     select: function(start, end, allDay) {
       var eventData = {
         start: start,
@@ -60,18 +116,63 @@ $(function() {
       saveDateTime(start, end);
     },
     eventClick: function (calEvent, jsEvent, view) {
+      if (calEvent.editable == false) {
+        alert('无法删除');
+        return ;
+      }
       var isDelete = confirm('删除空闲时段？');
       if (isDelete) {
+        found = false;
+        for (idx in freeTime) {
+          obj = freeTime[idx];
+          if (obj.start == calEvent.start.format('YYYY-MM-DD hh:mm:ss') &&
+              obj.end == calEvent.end.format('YYYY-MM-DD hh:mm:ss')){
+            freeTime.splice(idx, 1);
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          deleteTime.push(calEvent.id);
+        }
         calendar.fullCalendar('removeEvents' , function(ev){
           return (ev._id == calEvent._id);
-        })
+        });
       }
     },
   });
   $('#saveAgenda').click(function (){
-    $.post('{{ urlFor("agenda.publish_free_time[post]") }}', {dateTime: dateTime}, function(res) {
-      console.log(res);
-    }, 'json');
+    if (!freeTime.length > 0 && !deleteTime.length > 0) {
+      return ;
+    }
+    var timer;
+    $.ajax({
+      url: '{{ urlFor("agenda.publish_free_time[post]") }}',
+      type: 'post',
+      dataType: 'json',
+      cache: false,
+      data: {freeTime: freeTime, deleteTime: deleteTime},
+      beforeSend: function(){
+        timer = setTimeout(function(){
+          showDialog('数据发送中', '数据发送中，请耐心等候..');
+        }, 800);
+      },
+      success: function (res) {
+        if (res.success) {
+          $G.flash.flash('发布成功', 'success');
+          clearTimeout(timer);
+          hideDialog();
+          setTimeout(function() {
+            location.reload();
+          },2000);
+        }
+      },
+      error: function(res) {
+        clearTimeout(timer);
+        hideDialog();
+        $G.flash.flash('服务器发生错误，请联系管理员', 'danger');
+      }
+    });
   });
 });
 </script>

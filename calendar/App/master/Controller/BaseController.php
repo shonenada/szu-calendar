@@ -76,14 +76,31 @@ class BaseController {
         return self::$app->redirect($url, $status);
     }
 
-    static public function redirectIfSignIned($url, $status = 302) {
+    static public function redirectIfSignIned($url = null, $status = 302) {
+        if ($url === null)
+            $url = self::urlFor('master.error-403[get]');
+
         if (self::$currentUser)
             return self::redirect($url, $status);
     }
 
-    static public function signInRequired($url, $status = 302) {
+    static public function signInRequired($url = null, $status = 302) {
+        if ($url === null)
+            $url = self::urlFor('master.error-403[get]');
+
         if (!self::$currentUser)
             return self::redirect($url, $status);
+    }
+
+    static public function requiredRole($roleName, $url = null, $status = 302) {
+        if ($url === null)
+            $url = self::urlFor('master.error-403[get]');
+
+        $role = \RBAC\Helper::getRoleByName($roleName);
+        $hasPerm = $role->authenticate(self::$currentUser);
+        if (!$hasPerm) {
+            return self::redirect($url, $status);
+        }
     }
 
     static public function urlFor($name, $params = array()) {

@@ -15,7 +15,37 @@ class PublishFreeTime extends \Controller\BaseController {
     }
 
     static public function post() {
+        self::requiredRole('Teacher');
         $post = self::$request->post();
-        var_dump($post);
+
+        if (!isset($post['freeTime']) && !isset($post['deleteTime']))
+            return json_encode(array(
+                'success' => false,
+                'message' => array('缺少数据, 请确保正确选择时段'),
+            ));
+
+        if (isset($post['freeTime'])) {
+            $freeTime = $post['freeTime'];
+            foreach ($freeTime as $each) {
+                $calendar = new \Model\Calendar();
+                $calendar->type = \Model\Calendar::TYPE_FREE;
+                $calendar->teacher = self::$currentUser;
+                $calendar->startTime = \DateTime::createFromFormat('Y-m-d H:i:s', $each['start']);
+                $calendar->endTime = \DateTime::createFromFormat('Y-m-d H:i:s', $each['end']);
+                $calendar->event = null;
+                $calendar->save();
+                \Model\Calendar::flush();
+            }
+        }
+
+        if (isset($post['deleteTime'])) {
+            foreach ($post['deleteTime'] as $cid) {
+                $calendar = \Model\Calendar::find($cid);
+                $calendar->remove();
+                \Model\Calendar::flush();
+            }
+        }
+
+        return json_encode(array('success' => true));
     }
 }

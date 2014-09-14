@@ -185,13 +185,13 @@ body {
 .dialog-content {
   padding: 20px 30px;
   line-height: 2.5em;
+  border-bottom: 1px solid #d5d5d5;
 }
 
 .dialog-foot {
   background: #eff3f8;
   height: 70px;
   line-height: 55px;
-  border-top: 1px solid #d5d5d5;
   padding: 0 20px;
 }
 span.datetime-format {
