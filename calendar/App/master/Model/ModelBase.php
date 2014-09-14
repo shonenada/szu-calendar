@@ -65,6 +65,12 @@ class ModelBase {
         return ORMManager::getEntityManager();
     }
 
+    public function delete() {
+        $this->isDeleted = true;
+        $this->save();
+        self::flush();
+    }
+
     static public function paginate($page, $pagesize) {
         $dql = sprintf(
             'SELECT n FROM %s n '.

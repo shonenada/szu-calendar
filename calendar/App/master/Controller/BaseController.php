@@ -66,6 +66,10 @@ class BaseController {
         self::$app->flashArr(self::KEY_OF_MESSAGE, array($message, $type));
     }
 
+    static protected function flashNext($message, $type = 'info') {
+        self::$app->flashNextArr(self::KEY_OF_MESSAGE, array($message, $type));
+    }
+
     static protected function render($path, $args = array(), $status = null) {
         $renderArgs = array_merge($args, self::$injectedArgs);
         return self::$app->render($path, $renderArgs, $status);

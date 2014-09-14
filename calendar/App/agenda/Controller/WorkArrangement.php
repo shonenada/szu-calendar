@@ -2,16 +2,16 @@
 
 namespace Controller;
 
-class PublishFreeTime extends \Controller\BaseController {
+class WorkArrangement extends \Controller\BaseController {
 
-    static public $url = '/agenda/publish-free-time';
+    static public $url = '/agenda/work-arrangment';
     static public $allow = array(
         'GET' => array('Teacher'),
         'POST' => array('Teacher'),
     );
 
     static public function get() {
-        return self::render('agenda/publish_free_time.html', get_defined_vars());
+        return self::render('agenda/work_arrangement.html', get_defined_vars());
     }
 
     static public function post() {
@@ -41,11 +41,10 @@ class PublishFreeTime extends \Controller\BaseController {
         if (isset($post['deleteTime'])) {
             foreach ($post['deleteTime'] as $cid) {
                 $calendar = \Model\Calendar::find($cid);
-                $calendar->remove();
+                $calendar->delete();
                 \Model\Calendar::flush();
             }
         }
-
         return json_encode(array('success' => true));
     }
 }

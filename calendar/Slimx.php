@@ -81,7 +81,7 @@ class Slimx extends \Slim\Slim {
         });
     }
 
-    public function flashArr($key, $value) {
+    private function __flashArr($key, $value, $when) {
         if (isset($this->environment['slim.flash'])) {
             $messages = $this->environment['slim.flash']->getMessages();
 
@@ -91,8 +91,20 @@ class Slimx extends \Slim\Slim {
                 $msg = array();
 
             array_push($msg, $value);
-            $this->environment['slim.flash']->now($key, $msg);
+            if ($when == 'now') {
+                $this->environment['slim.flash']->now($key, $msg);
+            } else if($when == 'next' ) {
+                $this->environment['slim.flash']->set($key, $msg);
+            }
         }
+    }
+
+    public function flashArr($key, $value) {
+        $this->__flashArr($key, $value, 'now');
+    }
+
+    public function flashNextArr($key, $value) {
+        $this->__flashArr($key, $value, 'next');
     }
 
     public function flashRedirectKeep() {

@@ -89,7 +89,8 @@ class Calendar extends ModelBase {
         $calendarArr = array_filter($calendarArr, function($one) use($start, $end, $type) {
             return ($one->startTime->getTimestamp() >= $start
                     && $one->endTime->getTimestamp() <= $end
-                    && $one->type == $type);
+                    && $one->type == $type
+                    && $one->isDeleted == false);
         });
         $output = array();
         foreach($calendarArr as $one) {

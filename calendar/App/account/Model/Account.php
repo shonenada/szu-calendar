@@ -241,12 +241,6 @@ class Account extends ModelBase {
         return $this->lastIP == $ip;
     }
 
-    public function delete() {
-        $this->isDeleted = true;
-        $this->save();
-        Account::flush();
-    }
-
     static public function factory($value = array()) {
         $account = new Account();
 

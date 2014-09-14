@@ -8,8 +8,8 @@
 <li>发布空闲时段</li>
 {% endblock %}
 
-{% block content_header %}  发布空闲时段  {% endblock %}
-
+{% block content_header %}
+{% endblock %}
 
 {% block content_body %}
 <div class="mash"></div>
@@ -56,11 +56,13 @@ $(function() {
   var saveDateTime = function(start, end) {
     freeTime.push({start: start.format('YYYY-MM-DD hh:mm:ss'), end: end.format('YYYY-MM-DD hh:mm:ss')});
   }
+
   var date = new Date();
   var d = date.getDate();
   var m = date.getMonth();
   var y = date.getFullYear();
-  var calendar = $('#calendar').fullCalendar({
+
+  calendar = $('#calendar').fullCalendar({
     firstDay: 0,
     weekends: false,
     lang: 'zh-cn',
@@ -92,7 +94,7 @@ $(function() {
         beforeSend: function(){
           timer = setTimeout(function(){
             showDialog('数据加载中', '数据加载中，请耐心等候..');
-          }, 800);
+          }, 500);
         },
         success: function(res) {
           callback(res);
@@ -106,13 +108,17 @@ $(function() {
         }
       });
     },
-    select: function(start, end, allDay) {
+    select: function(start, end, allDay, view) {
+      if (view.name == 'month') {
+        calendar.fullCalendar('unselect');
+        return ;
+      }
       var eventData = {
         start: start,
-        end: end
+        end: end,
       };
-      $('#calendar').fullCalendar('renderEvent', eventData, true); // stick? = true
-      $('#calendar').fullCalendar('unselect');
+      calendar.fullCalendar('renderEvent', eventData, true); // stick? = true
+      calendar.fullCalendar('unselect');
       saveDateTime(start, end);
     },
     eventClick: function (calEvent, jsEvent, view) {
@@ -147,7 +153,7 @@ $(function() {
     }
     var timer;
     $.ajax({
-      url: '{{ urlFor("agenda.publish_free_time[post]") }}',
+      url: '{{ urlFor("agenda.work_arrangement[post]") }}',
       type: 'post',
       dataType: 'json',
       cache: false,
@@ -155,16 +161,17 @@ $(function() {
       beforeSend: function(){
         timer = setTimeout(function(){
           showDialog('数据发送中', '数据发送中，请耐心等候..');
-        }, 800);
+        }, 500);
       },
       success: function (res) {
         if (res.success) {
-          $G.flash.flash('发布成功', 'success');
           clearTimeout(timer);
           hideDialog();
-          setTimeout(function() {
-            location.reload();
-          },2000);
+          calendar.fullCalendar('removeEvents');
+          calendar.fullCalendar('refetchEvents');
+          $G.flash.flash('发布成功', 'success');
+        } else {
+          showDialog('发布失败', res.messages.join(', '));
         }
       },
       error: function(res) {
