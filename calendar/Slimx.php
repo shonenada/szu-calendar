@@ -159,8 +159,7 @@ class Slimx extends \Slim\Slim {
         if (array_key_exists('allow', $vars)) {
             foreach ($vars['allow'] as $method => $roles) {
                 foreach ($roles as $roleName){
-                    $path = sprintf("\\RBAC\\Roles\\%s::getInstance", $roleName);
-                    $role = call_user_func($path);
+                    $role = \RBAC\Helper::getRoleByName($roleName);
                     $this->auth->allow($role, $resource, $method);
                 }
             }
@@ -169,8 +168,7 @@ class Slimx extends \Slim\Slim {
         if (array_key_exists('deny', $vars)) {
             foreach ($vars['deny'] as $method => $roles) {
                 foreach ($roles as $roleName){
-                    $path = sprintf("\\RBAC\\Roles\\%s::getInstance", $roleName);
-                    $role = call_user_func($path);
+                    $role = \RBAC\Helper::getRoleByName($roleName);
                     $this->auth->deny($role, $resource, $method);
                 }
             }
