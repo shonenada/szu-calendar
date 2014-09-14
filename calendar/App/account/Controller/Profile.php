@@ -26,7 +26,7 @@ class Profile extends \Controller\BaseController {
 
         $account = self::$currentUser;
         if (!isset($account->username) || strlen($account->username) == 0) {
-            if (\Model\Account::isExist(self::$request->post('username'))){
+            if (\Model\Account::isExistBy('username', self::$request->post('username'))){
                 self::flash('用户名已存在', 'danger');
                 return self::render('account/profile.html', get_defined_vars());
             }

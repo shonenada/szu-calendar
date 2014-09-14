@@ -44,7 +44,7 @@ class SignUp extends \Controller\BaseController {
             return self::render('account/signup.html', get_defined_vars());
         }
 
-        if (\Model\Account::isExist(self::$request->post('username'))){
+        if (\Model\Account::isExistBy('usernanme', self::$request->post('username'))){
             self::flash('用户名已存在', 'danger');
             return self::render('account/signup.html', get_defined_vars());
         }
