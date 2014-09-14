@@ -1,0 +1,56 @@
+.group-list {
+swidth: 28%;
+  border: 1px solid #ddd;
+}
+
+.group-detail {
+  margin-left: 3%;
+  width: 65%;
+  border: 1px solid #ddd;
+}
+
+.group-title {
+  height: 40px;
+  line-height: 40px;
+  background: rgba(248,248,248,.9);
+  padding: 0 20px;
+}
+
+.group-ul li {
+  display: block;
+  height: 40px;
+  line-height: 40px;
+  padding: 0 40px;
+  border-top: 1px solid #ddd;
+}
+
+.group-ul li a {
+  text-decoration: underline;
+  font-size: 14px;
+  display: block;
+  width: 100%;
+}
+
+.group-ul li:hover,
+.group-ul li.active {
+  background: #fafafa;
+}
+
+.group-ul li.active a {
+  color: #438eb9;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.dialog-content #title {
+  width: 60%;
+  font-size: 14px;
+}
+
+.dialog-content #description {
+  width: 100%;
+  font-size: 14px;
+  padding: 3px;
+  line-height: 14px;
+  height: 100px;
+}
