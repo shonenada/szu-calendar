@@ -110,18 +110,12 @@ body {
 }
 
 #aside .nav-list li {
-  height: 40px;
-  line-height: 40px;
   border-top: 1px solid #fff;
-  border-bottom: 1px solid #e5e5e5;
   font-size: 14px;
   cursor: pointer;
   position: relative;
 }
-#aside .nav-list li:hover {
-  background: #F9F9F9;
-  border-left: 3px solid #2b7dbc;
-}
+
 #aside .nav-list li.active {
   background: #FFF;
   border-right: 1px solid #2b7dbc;
@@ -145,7 +139,63 @@ body {
   line-height: 40px;
   color: #585858;
   text-shadow: none!important;
+  border-bottom: 1px solid #e5e5e5;
   text-decoration: none;  
+}
+#aside .nav-list li a:hover {
+  background: #F9F9F9;
+  border-left: 3px solid #2b7dbc;
+}
+
+.dropdown-navlist {
+  position: relative;
+}
+.dropdown-navlist:before {
+  content: "";
+  display: block;
+  position: absolute;
+  z-index: 1;
+  left: 40px;
+  top: 0;
+  bottom: 0;
+  border: 1px dotted #9dbdd6;
+  border-width: 0 0 0 1px;
+}
+.dropdown-navlist li:before {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  width: 7px;
+  left: 42px;
+  top: 20px;
+  border-top: 1px dotted #9dbdd6
+}
+.dropdown-navlist li {
+  background: #FFF!important;
+}
+
+.dropdown-navlist li a {
+  border-bottom: 1px dotted #e5e5e5!important;
+  padding-left: 70px!important;
+}
+.dropdown-navlist li a:hover {
+  color: #4b88b7!important;
+  border-left: none!important;
+  background: #fff!important;
+}
+
+.dropdown-navlist li.active a:before,
+.dropdown-navlist li a:hover:before {
+  font-family: 'FontAwesome';
+  font-size: 12px;
+  content: "\f101";
+  position: absolute;
+  top: 0px;
+  color: #4b88b7;
+  left: 55px;
+}
+.dropdown-navlist li:last-child a {
+  border-bottom: 1px solid #e5e5e5!important;
 }
 
 #content {

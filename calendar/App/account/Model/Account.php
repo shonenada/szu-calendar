@@ -318,4 +318,10 @@ class Account extends ModelBase {
         return static::$RANK_NAME[$rankNumber];
     }
 
+    static public function getStudentList() {
+        # bad smell....
+        $query = static::query()->findBy(array('rankNum' => '01', 'isDeleted' => false));
+        return $query;
+    }
+
 }

@@ -2,6 +2,7 @@
 
 {% block htmlhead %}
 {{ renderCss('styles/fullcalendar.min.css') | raw }}
+{{ renderCss('styles/agenda.css') | raw }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -13,9 +14,10 @@
 
 {% block content_body %}
 <div class="mash"></div>
+
 <div class="dialog">
   <div class="dialog-title">
-    <span class="dialog-title-content"></span>
+    &nbsp;<span class="dialog-title-content"></span>
     <div class="pull-right">
       <a href="javascript:void(0);" class="dialog-btn-close">
         <i class="icon icon-remove"></i>
@@ -23,8 +25,22 @@
     </div>
   </div>
   <div class="dialog-content"></div>
+  <div class="dialog-foot">
+    <div class="pull-right">
+      <div id="show-event-dialog-foot" class="dialog-foot-div">
+        <a href="javascript:void(0);" class="btn btn-danger dialog-btn-delete">删除</a>
+        <a href="javascript:void(0);" class="btn btn-primary dialog-btn-close">关闭</a>
+      </div>
+      <div id="add-event-dialog-foot" class="dialog-foot-div">
+        <a href="javascript:void(0);" class="btn btn-info dialog-btn-close">关闭</a>
+        <a href="javascript:void(0);" class="btn btn-primary dialog-btn-confirm">发布</a>
+      </div>
+    </div>
+  </div>
 </div>
+
 <div id="calendar"></div>
+
 <div class="pull-right" style="margin-bottom: 20px;">
   <button type="button" class="btn btn-success" id="saveAgenda">保存</button>
 </div>
@@ -36,26 +52,140 @@
 {{ renderJs('scripts/plugins/fullcalendar.lang.zh-cn.js') | raw }}
 <script type="text/javascript">
 $(function() {
-
-  var showDialog = function(title, content) {
+  var currentClickEvent = null;
+  var prevTitle = '';
+  var prevDescription = '';
+  var showTipDialog = function(title, content) {
+    $('.dialog-foot').hide();
     $('.dialog-title-content').html(title);
     $('.dialog-content').html(content);
     $('.dialog').fadeIn();
     $('.mash').fadeIn();
   }
+
+  var showEventDetailDialog = function(event) {
+    currentClickEvent = event;
+    $('.dialog-foot-div').hide();
+    $('#show-event-dialog-foot').show();
+    $('.dialog-foot').show();
+    $('.dialog-title-content').html(event.title);
+    var content = $('<div></div>');
+    var startDiv = $('<span></span>')
+                    .addClass('datetime-format')
+                    .append(event.start.format('YYYY-MM-DD HH:mm:ss'));
+    var endDiv = $('<span></span>')
+                    .addClass('datetime-format')
+                    .append(event.end.format('YYYY-MM-DD HH:mm:ss'));
+    content.append($('<div>时间：</div>').append(startDiv).append(' ~ ').append(endDiv));
+    content.append($('<div>工作简述：</div>').append(event.description));
+    $('.dialog-content').html(content);
+    $('.dialog').fadeIn();
+    $('.mash').fadeIn();
+  }
+
+  var showAddEventDialog = function(start, end, allDay, view) {
+    $('.dialog-foot-div').hide();
+    $('#add-event-dialog-foot').show();
+    $('.dialog-foot').show();
+    $('.dialog-title-content').html('添加安排');
+    var content = $('<div></div>');
+
+    var titleDiv = $("<div></div>");
+    var titleInput = $('<input type="text" id="title" />').val(prevTitle);
+    titleDiv.append('标题：').append(titleInput);
+
+    var timeDiv = $("<div></div>");
+    var startDiv = $('<span></span>')
+                    .addClass('datetime-format')
+                    .append(start.format('YYYY-MM-DD HH:mm:ss'));
+    var endDiv = $('<span></span>')
+                    .addClass('datetime-format')
+                    .append(end.format('YYYY-MM-DD HH:mm:ss'));
+    timeDiv.append('时间段：').append(startDiv).append(' ~ ').append(endDiv);
+
+    var descriptionDiv = $('<div></div>');
+    var textarea = $('<textarea id="description"></textarea>').val(prevDescription);
+    descriptionDiv.append('工作简述：<br />').append(textarea);
+
+    content.append(titleDiv).append(timeDiv).append(descriptionDiv);
+    $('.dialog-content').html(content);
+    $('.dialog').fadeIn();
+    $('.mash').fadeIn();
+
+    $('.dialog-btn-confirm').unbind();
+    $('.dialog-btn-confirm').click(function(){
+      prevTitle = $('#title').val();
+      prevDescription = $('#description').val();
+      var eventData = {
+        title: $('#title').val(),
+        description: $('#description').val(),
+        start: start,
+        end: end,
+      };
+      addEvent(eventData);
+    });
+
+  }
+
   var hideDialog = function() {
     $('.dialog').fadeOut();
     $('.mash').fadeOut();
   }
+
   $('.dialog-btn-close').click(function(){
     hideDialog();
   });
+  $('.dialog-btn-delete').click(function(){
+    if(currentClickEvent) {
+      removeEvent(currentClickEvent);
+    }
+  });
+
+  var showEvent = function(calEvent, jsEvent, view) {
+    showEventDetailDialog(calEvent);
+  }
+
+  var addEvent = function(eventData) {
+    calendar.fullCalendar('renderEvent', eventData, true); // stick? = true
+    calendar.fullCalendar('unselect');
+    saveDateTime(eventData);
+    hideDialog();
+  }
+
+  var removeEvent = function(calEvent) {
+    var isDelete = confirm('删除该工作安排？');
+    if (isDelete) {
+      found = false;
+      for (idx in freeTime) {
+        obj = freeTime[idx];
+        if (obj.start == calEvent.start.format('YYYY-MM-DD HH:mm:ss') &&
+            obj.end == calEvent.end.format('YYYY-MM-DD HH:mm:ss')){
+          freeTime.splice(idx, 1);
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        deleteTime.push(calEvent.id);
+      }
+      calendar.fullCalendar('removeEvents' , function(ev){
+        return (ev._id == calEvent._id);
+      });
+      hideDialog();
+    }
+  }
+
+  var saveDateTime = function(eventData) {
+    freeTime.push({
+      title: eventData.title,
+      description: eventData.description,
+      start: eventData.start.format('YYYY-MM-DD HH:mm:ss'),
+      end: eventData.end.format('YYYY-MM-DD HH:mm:ss')
+    });
+  }
 
   var freeTime = [];
   var deleteTime = [];
-  var saveDateTime = function(start, end) {
-    freeTime.push({start: start.format('YYYY-MM-DD hh:mm:ss'), end: end.format('YYYY-MM-DD hh:mm:ss')});
-  }
 
   var date = new Date();
   var d = date.getDate();
@@ -71,10 +201,11 @@ $(function() {
       center: 'title',
       right: 'month,agendaWeek',
     },
+    height: 'auto',
     allDaySlot: false,
     minTime: '08:00:00',
     maxTime: '18:00:00',
-    slotDuration: '00:15:00',
+    slotDuration: '00:05:00',
     defaultView: 'agendaWeek',
     defaultDate: y + '-' + (m+1) + '-' + (d+1),
     editable: true,
@@ -83,6 +214,9 @@ $(function() {
     selectHelper: true,
     events: function (start, end, timezone, callback) {
       var timer;
+      $('#calendar').fullCalendar('removeEvents');
+      freeTime.splice(0, freeTime.length);
+      deleteTime.splice(0, deleteTime.length);
       $.ajax({
         url: "{{ urlFor('agenda.free_time_json[get]') }}",
         type: 'get',
@@ -93,7 +227,7 @@ $(function() {
         },
         beforeSend: function(){
           timer = setTimeout(function(){
-            showDialog('数据加载中', '数据加载中，请耐心等候..');
+            showTipDialog('数据加载中', '数据加载中，请耐心等候..');
           }, 500);
         },
         success: function(res) {
@@ -113,40 +247,17 @@ $(function() {
         calendar.fullCalendar('unselect');
         return ;
       }
-      var eventData = {
-        start: start,
-        end: end,
-      };
-      calendar.fullCalendar('renderEvent', eventData, true); // stick? = true
-      calendar.fullCalendar('unselect');
-      saveDateTime(start, end);
+      showAddEventDialog(start, end, allDay, view);
     },
     eventClick: function (calEvent, jsEvent, view) {
       if (calEvent.editable == false) {
         alert('无法删除');
         return ;
       }
-      var isDelete = confirm('删除空闲时段？');
-      if (isDelete) {
-        found = false;
-        for (idx in freeTime) {
-          obj = freeTime[idx];
-          if (obj.start == calEvent.start.format('YYYY-MM-DD hh:mm:ss') &&
-              obj.end == calEvent.end.format('YYYY-MM-DD hh:mm:ss')){
-            freeTime.splice(idx, 1);
-            found = true;
-            break;
-          }
-        }
-        if (!found) {
-          deleteTime.push(calEvent.id);
-        }
-        calendar.fullCalendar('removeEvents' , function(ev){
-          return (ev._id == calEvent._id);
-        });
-      }
+      showEvent(calEvent, jsEvent, view);
     },
   });
+
   $('#saveAgenda').click(function (){
     if (!freeTime.length > 0 && !deleteTime.length > 0) {
       return ;
@@ -160,7 +271,7 @@ $(function() {
       data: {freeTime: freeTime, deleteTime: deleteTime},
       beforeSend: function(){
         timer = setTimeout(function(){
-          showDialog('数据发送中', '数据发送中，请耐心等候..');
+          showTipDialog('数据发送中', '数据发送中，请耐心等候..');
         }, 500);
       },
       success: function (res) {
@@ -169,9 +280,11 @@ $(function() {
           hideDialog();
           calendar.fullCalendar('removeEvents');
           calendar.fullCalendar('refetchEvents');
-          $G.flash.flash('发布成功', 'success');
+          freeTime.splice(0, freeTime.length);
+          deleteTime.splice(0, deleteTime.length);
+          $G.flash.flash('保存成功', 'success');
         } else {
-          showDialog('发布失败', res.messages.join(', '));
+          showTipDialog('保存失败', res.messages.join(', '));
         }
       },
       error: function(res) {

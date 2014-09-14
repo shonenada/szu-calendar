@@ -1,0 +1,50 @@
+{% extends 'dashboard/base.html' %}
+
+{% block htmlhead %}
+{{ renderCss('styles/agenda.css') | raw }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<li>学生管理</li>
+<li>分组管理</li>
+{% endblock %}
+
+{% block content_header %}
+<div class="content-header">
+分组管理
+</div>
+{% endblock %}
+
+{% block content_body %}
+<a href="javascript:void(0)" id="add-group-btn" class="btn btn-info" style="margin: 0 0 20px 0;">添加分组</a>
+<div style="overflow: auto">
+  <div class="pull-left group-list">
+    <div class="group-list-title group-title">已有分组</div>
+    <div class="group-list-body group-body">
+      <ul class="group-list-ul group-ul">
+      {% for group in groups %}
+      <li><a href="javascript:void(0)" class="group-list-btn" data-id="{{ group.id }}">{{ group.name }}</a></li>
+      {% endfor %}
+    </ul>
+    </div>
+  </div>
+  <div class="pull-left group-detail">
+    <div class="group-detail-title group-title">组内学生</div>
+      <div class="group-detail-body group-body">
+        <ul class="group-list-ul group-ul">
+        {% for student in students %}
+        <li><a href="javascript:void(0)">{{ student.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block bodyfoot %}
+<script>
+$(function(){
+  $('.group-list-ul li').first().addClass('active');
+});
+</script>
+{% endblock %}

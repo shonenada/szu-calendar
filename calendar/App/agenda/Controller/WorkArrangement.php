@@ -30,9 +30,10 @@ class WorkArrangement extends \Controller\BaseController {
                 $calendar = new \Model\Calendar();
                 $calendar->type = \Model\Calendar::TYPE_FREE;
                 $calendar->teacher = self::$currentUser;
+                $calendar->title = $each['title'];
+                $calendar->description = $each['description'];
                 $calendar->startTime = \DateTime::createFromFormat('Y-m-d H:i:s', $each['start']);
                 $calendar->endTime = \DateTime::createFromFormat('Y-m-d H:i:s', $each['end']);
-                $calendar->event = null;
                 $calendar->save();
                 \Model\Calendar::flush();
             }

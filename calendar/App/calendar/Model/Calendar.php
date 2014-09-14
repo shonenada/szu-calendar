@@ -8,10 +8,11 @@ namespace Model;
  *
  * @property integer   $id
  * @property string    $type
+ * @property string    $title
+ * @property string    $description
  * @property integer   $teacherId
  * @property datetime  $startTime
  * @property datetime  $endTime
- * @property integer   $eventId
  * @property text      $remark
  * @property datetime  $created
  * @property boolean   $isDeleted
@@ -35,6 +36,16 @@ class Calendar extends ModelBase {
     public $type;
 
     /**
+     * @Column(name="title", type="string", length=50)
+     **/
+    public $title;
+
+    /**
+     * @Column(name="description", type="string", length=300)
+     **/
+    public $description;
+
+    /**
      * @Column(name="teacher_id", type="integer")
      **/
     public $teacherId;
@@ -54,17 +65,6 @@ class Calendar extends ModelBase {
      * @Column(name="end_time", type="datetime")
      **/
     public $endTime;
-
-    /**
-     * @Column(name="event_id", type="integer")
-     **/
-    public $eventId;
-
-    /**
-     * @OneToOne(targetEntity="Event")
-     * @JoinColumn(name="event_id", referencedColumnName="id")
-     **/
-    public $evnet;
 
     /**
      * @Column(name="remark", type="text")
@@ -96,7 +96,8 @@ class Calendar extends ModelBase {
         foreach($calendarArr as $one) {
             $output[] = array(
                 'id' => $one->id,
-                'title' => '',
+                'title' => $one->title,
+                'description' => $one->description,
                 'start' => $one->startTime->format('Y-m-d\TH:i:s'),
                 'end' => $one->endTime->format('Y-m-d\TH:i:s'),
                 'color' => '#d15b47',

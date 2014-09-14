@@ -1,21 +1,27 @@
 {% extends 'dashboard/base.html' %}
 
 {% block htmlhead %}
-{{ renderCss('styles/fullcalendar.min.css') | raw }}
 {% endblock %}
 
 {% block breadcrumbs %}
-<li>查看预约</li>
+<li>学生分组</li>
 {% endblock %}
 
 {% block content_header %}
 <div class="content-header">
-查看预约
+学生分组
 </div>
 {% endblock %}
 
-
 {% block content_body %}
+<div class="pull-left group-list">
+{% for group in groups %}
+
+{% endfor %}
+</div>
+<div class="pull-right group-detail">
+
+</div>
 {% endblock %}
 
 {% block bodyfoot %}
