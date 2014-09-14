@@ -26,6 +26,8 @@ function createApp ($configFiles=array()) {
     $config = require_once(APPROOT . 'config/common.php');
     $app->config($config);
 
+    date_default_timezone_set('Asia/Shanghai');
+
     // 读取用户自定义的配置
     foreach ($configFiles as $path) {
         if (is_file($path)) {
