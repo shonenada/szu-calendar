@@ -11,6 +11,9 @@ class Profile extends \Controller\BaseController {
     );
 
     static public function get() {
+        if (self::$currentUser->username == '') {
+            self::flash('您未登记用户名，为了方便登录，请您添加用户名', 'warning');
+        }
         return self::render('account/profile.html', get_defined_vars());
     }
 
@@ -23,6 +26,10 @@ class Profile extends \Controller\BaseController {
 
         $account = self::$currentUser;
         if (!isset($account->username) || strlen($account->username) == 0) {
+            if (\Model\Account::isExist(self::$request->post('username'))){
+                self::flash('用户名已存在', 'danger');
+                return self::render('account/profile.html', get_defined_vars());
+            }
             $account->username = self::$request->post('username');
         }
         $account->email = self::$request->post('email');

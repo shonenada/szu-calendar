@@ -74,6 +74,7 @@ class ViewFilterExtension extends \Twig_Extension {
         }
         return $string;
     }
+
 }
 
 

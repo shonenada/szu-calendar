@@ -38,7 +38,7 @@
         <input type="text" disabled="disabled" value="{{ user.gender }}"/>
       </div>
       <div class="form-field">
-        <label class="label">{% if rankNum == '05' %}教工号{% else %}学号{% endif %}*</label>
+        <label class="label">{% if user.rankNum == '05' %}教工号{% else %}学号{% endif %}*</label>
         <input type="text" disabled="disabled" value="{{ user.szuno }}"/>
       </div>
     </div>

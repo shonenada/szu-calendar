@@ -30,6 +30,10 @@ class CAS extends \Controller\BaseController {
             $url = sprintf($URL_PATTERN, $CASserver, $ticket, $SREVICE_URL);
 
             $xmlString = file_get_contents($url);
+            if (!$xmlString) {
+                self::flash('验证失败');
+                return self::redirect(self::urlFor('account.sign_in[get]'));
+            }
             $name = $_SESSION['cas']['Pname'] = self::RegexLog($xmlString, "Pname");
             $college = $_SESSION['cas']['OrgName'] = self::RegexLog($xmlString, "OrgName");
             $gender = $_SESSION['cas']['SexName'] = self::RegexLog($xmlString, "SexName");
@@ -56,7 +60,7 @@ class CAS extends \Controller\BaseController {
                 \Model\Account::flush();
                 $account->login(self::$app);
             }
-            return self::redirect(self::urlFor('account.sign_up[get]'));
+            return self::redirect(self::urlFor('account.profile[get]'));
         } else {
             return self::render('account/cas.html');
         }

@@ -200,6 +200,11 @@ class Account extends ModelBase {
         $app->setEncryptedCookie('token', $token);
     }
 
+    public function isEmptyPassword() {
+        $isEmptyPassword = $this->password == self::hashPassword('');
+        return ($isEmptyPassword);
+    }
+
     public function setPassword($raw) {
         $hashPassword = Account::hashPassword($raw, self::PASSWORD_SALT);
         $this->password = $hashPassword;
@@ -244,18 +249,44 @@ class Account extends ModelBase {
 
     static public function factory($value = array()) {
         $account = new Account();
-        $account->username = $value['username'];
-        $account->setPassword($value['password']);
+
         $account->name = $value['name'];
-        $account->college = $value['college'];
-        $account->gender = $value['gender'];
         $account->szuno = $value['szuno'];
-        $account->cardId = $value['cardId'];
-        $account->identityNumber = $value['identityNumber'];
-        $account->rankNum = $value['rankNum'];
-        $account->email = $value['email'];
-        $account->phone = $value['phone'];
-        $account->shortPhone = $value['shortPhone'];
+
+        if (isset($value['username']))
+            $account->username = $value['username'];
+        else
+            $account->username = '';
+
+        if (isset($value['password']))
+            $account->setPassword($value['password']);
+        else
+            $account->setPassword('');
+
+        if (isset($value['college']))
+            $account->college = $value['college'];
+
+        if (isset($value['gender']))
+            $account->gender = $value['gender'];
+
+        if (isset($value['cardId']))
+            $account->cardId = $value['cardId'];
+
+        if (isset($value['identityNumber']))
+            $account->identityNumber = $value['identityNumber'];
+
+        if (isset($value['rankNum']))
+            $account->rankNum = $value['rankNum'];
+
+        if (isset($value['email']))
+            $account->email = $value['email'];
+
+        if (isset($value['phone']))
+            $account->phone = $value['phone'];
+
+        if (isset($value['shortPhone']))
+            $account->shortPhone = $value['shortPhone'];
+
         return $account;
     }
 

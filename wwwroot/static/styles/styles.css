@@ -440,7 +440,7 @@ button.close {
   top: 10px;
   left: 50%;
   margin-left: -40%;
-  opacity: 0.8;
+  opacity: 0.9;
 }
 .flash-message-fixed:hover {
   opacity: 1;
