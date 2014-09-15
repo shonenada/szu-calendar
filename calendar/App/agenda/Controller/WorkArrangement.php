@@ -29,7 +29,7 @@ class WorkArrangement extends \Controller\BaseController {
             foreach ($freeTime as $each) {
                 $calendar = new \Model\Calendar();
                 $calendar->type = \Model\Calendar::TYPE_FREE;
-                $calendar->teacher = self::$currentUser;
+                $calendar->account = self::$currentUser;
                 $calendar->title = $each['title'];
                 $calendar->description = $each['description'];
                 $calendar->startTime = \DateTime::createFromFormat('Y-m-d H:i:s', $each['start']);

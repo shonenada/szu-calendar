@@ -10,7 +10,7 @@ namespace Model;
  * @property string    $type
  * @property string    $title
  * @property string    $description
- * @property integer   $teacherId
+ * @property integer   $accountId
  * @property datetime  $startTime
  * @property datetime  $endTime
  * @property text      $remark
@@ -46,15 +46,15 @@ class Calendar extends ModelBase {
     public $description;
 
     /**
-     * @Column(name="teacher_id", type="integer")
+     * @Column(name="account_id", type="integer")
      **/
-    public $teacherId;
+    public $accountId;
 
     /**
      * @ManyToOne(targetEntity="Account", inversedBy="calendars")
-     * @JoinColumn(name="teacher_id", referencedColumnName="id")
+     * @JoinColumn(name="account_id", referencedColumnName="id")
      **/
-    public $teacher;
+    public $account;
 
     /**
      * @Column(name="start_time", type="datetime")

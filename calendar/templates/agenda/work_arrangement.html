@@ -14,7 +14,6 @@
 
 {% block content_body %}
 <div class="mash"></div>
-
 <div class="dialog">
   <div class="dialog-title">
     &nbsp;<span class="dialog-title-content"></span>
@@ -32,8 +31,8 @@
         <a href="javascript:void(0);" class="btn btn-primary dialog-btn-close">关闭</a>
       </div>
       <div id="add-event-dialog-foot" class="dialog-foot-div">
-        <a href="javascript:void(0);" class="btn btn-info dialog-btn-close">关闭</a>
         <a href="javascript:void(0);" class="btn btn-primary dialog-btn-confirm">发布</a>
+        <a href="javascript:void(0);" class="btn btn-info dialog-btn-close">关闭</a>
       </div>
     </div>
   </div>
@@ -91,7 +90,7 @@ $(function() {
     var content = $('<div></div>');
 
     var titleDiv = $("<div></div>");
-    var titleInput = $('<input type="text" id="title" />').val(prevTitle);
+    var titleInput = $('<input type="text" id="title" class="input-text" />').val(prevTitle);
     titleDiv.append('标题：').append(titleInput);
 
     var timeDiv = $("<div></div>");
@@ -104,7 +103,7 @@ $(function() {
     timeDiv.append('时间段：').append(startDiv).append(' ~ ').append(endDiv);
 
     var descriptionDiv = $('<div></div>');
-    var textarea = $('<textarea id="description"></textarea>').val(prevDescription);
+    var textarea = $('<textarea id="description" class="input-textarea"></textarea>').val(prevDescription);
     descriptionDiv.append('工作简述：<br />').append(textarea);
 
     content.append(titleDiv).append(timeDiv).append(descriptionDiv);
@@ -124,7 +123,6 @@ $(function() {
       };
       addEvent(eventData);
     });
-
   }
 
   var hideDialog = function() {

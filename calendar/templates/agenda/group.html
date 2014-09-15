@@ -1,0 +1,256 @@
+{% extends 'dashboard/base.html' %}
+
+{% block htmlhead %}
+{{ renderCss('styles/agenda.css') | raw }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<li><a href="javascript:void()">学生管理</a></li>
+<li><a href="{{ urlFor('agenda.group_index[get]') }}">分组管理</a></li>
+{% if currentGroup %}
+<li>{{ currentGroup.name }}</li>
+{% endif %}
+{% endblock %}
+
+{% block content_header %}
+<div class="content-header">
+分组管理
+</div>
+{% endblock %}
+
+{% block content_body %}
+<div class="mash"></div>
+<div class="dialog">
+  <div class="dialog-title">
+    &nbsp;<span class="dialog-title-content"></span>
+    <div class="pull-right">
+      <a href="javascript:void(0);" class="dialog-btn-close">
+        <i class="icon icon-remove"></i>
+      </a>
+    </div>
+  </div>
+  <div class="dialog-content"></div>
+  <div class="dialog-foot">
+    <div class="pull-right">
+      <div id="add-event-dialog-foot" class="dialog-foot-div">
+        <a href="javascript:void(0);" class="btn btn-primary dialog-btn-confirm">确定</a>
+        <a href="javascript:void(0);" class="btn btn-info dialog-btn-close">关闭</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<a href="javascript:void(0)" id="add-group-btn" class="btn btn-info" style="margin: 0 0 20px 0;">添加分组</a>
+{% if currentGroup %}
+<a href="javascript:void(0)" id="modify-list-btn" class="btn btn-success" style="margin: 0 0 20px 0;">修改列表</a>
+<a href="javascript:void(0)" id="list-student-btn" class="btn btn-warning" style="margin: 0 0 20px 0; display: none;">组内学生</a>
+<a href="javascript:void(0)" id="delete-group-btn" class="btn btn-danger" style="margin: 0 0 20px 0;">删除分组</a>
+{% endif %}
+
+<div style="overflow: auto">
+  <div class="pull-left group-list">
+    <div class="group-list-title group-title">已有分组</div>
+    <div class="group-list-body group-body">
+      <ul class="group-list-ul group-ul">
+      {% for group in groups %}
+        <li><a href="{{ groupManageBaseURL ~ group.id }}" class="group-list-btn" data-id="{{ group.id }}" alt="{{ group.remark }}">{{ group.name }}</a></li>
+      {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% if currentGroup %}
+  <div class="pull-left group-student-list" id="student-list" style="display: none;">
+    <form id="add-student-form" action="{{ groupManageBaseURL ~ currentGroup.id ~ '/account' }}" method="post">
+      <div class="group-student-list-title group-title" style="border-bottom: 1px solid #ddd;">修分组列表</div>
+      <div class="group-student-list-body group-body">
+        {% for student in students %}
+        <span class="student-list-item">
+          <label><input type="checkbox" value="{{ student.id }}" name="students" {% if student in currentGroup.accounts %}checked="checked"{% endif %} />{{ student.name }}</label></span>
+        {% endfor %}
+      </div>
+      <div class="group-student-list-foot group-foot">
+        <div class="pull-right">
+          <input type="submit" class="btn btn-primary" id="save-form-btn" value="保存" />
+          <a href="javascript:void(0)" class="btn btn-info" id="cancel-student-list-btn">取消</a>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="pull-left group-detail" id="group-student-list">
+    {% if currentGroup.accounts | length > 0 %}
+    <div class="group-detail-title group-title">组内学生</div>
+    {% else %}
+    <div class="group-detail-title group-title">组内无学生</div>
+    {% endif %}
+    <div class="group-detail-body group-body">
+      <ul class="group-list-ul group-ul">
+        {% for student in currentGroup.accounts %}
+        <li><a href="javascript:void(0)">{{ student.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block bodyfoot %}
+<script>
+$(function(){
+  $('#student-list').hide();
+  var showAddGroupDialog = function() {
+    $('.dialog-foot-div').hide();
+    $('#add-event-dialog-foot').show();
+    $('.dialog-foot').show();
+    $('.dialog-title-content').html('添加分组');
+
+    var content = $('<div></div>');
+    var input = $('<input type="text" id="groupName" class="input-text" />');
+    var textarea = $('<textarea id="groupRemark" class="input-textarea"></textarea>');
+    content.append('分组名：').append(input);
+    content.append('<br />');
+    content.append('备注：').append(textarea);
+
+    $('.dialog-content').html(content);
+    $('.dialog').fadeIn();
+    $('.mash').fadeIn();
+
+    $('.dialog-btn-confirm').unbind();
+    $('.dialog-btn-confirm').click(function(){
+      $.ajax({
+        url: '{{ urlFor("agenda.group_index[post]") }}',
+        type: 'post',
+        dataType: 'json',
+        data: {
+          name: $('#groupName').val(),
+          remark: $('#groupRemark').val()
+        },
+        beforeSend: function(){
+          $(".dialog-btn-confirm").attr('disabled', 'disabled');
+        },
+        success: function(res) {
+          if (res.success) {
+            $G.flash.flash('添加成功');
+            hideDialog();
+            setTimeout(function () {
+              window.location.reload(); 
+            }, 1500);
+          } else {
+            $G.flash.flash(res.message.join(' '), 'warning');
+            $(".dialog-btn-confirm").removeAttr('disabled');
+          }
+        },
+        error: function() {
+          hideDialog();
+          $G.flash.flash('服务器发生错误，请联系管理员', 'danger');
+        }
+      });
+    });
+  }
+
+  var hideDialog = function() {
+    $('.dialog').fadeOut();
+    $('.mash').fadeOut();
+  }
+
+  $('.dialog-btn-close').click(function(){
+    hideDialog();
+  });
+
+  $('#add-group-btn').click(function() {
+    $(".dialog-btn-confirm").removeAttr('disabled');
+    showAddGroupDialog();
+  });
+
+  {% if currentGroup %}
+  $('#modify-list-btn').click(function (){
+    $('#group-student-list').slideUp('fast');
+    $('#student-list').slideDown('fast');
+    $('#list-student-btn').show();
+    $(this).hide();
+  });
+
+  $('#list-student-btn').click(function (){
+    $('#student-list').slideUp('fast');
+    $('#group-student-list').slideDown('fast');
+    $('#modify-list-btn').show();
+    $(this).hide();
+  });
+
+  $("#cancel-student-list-btn").click(function() {
+    $('#student-list').slideUp('fast');
+    $('#group-student-list').slideDown('fast');
+  })
+
+  $("#add-student-form").submit(function() {
+    var form = $(this);
+    $.ajax({
+      url: form.attr('action'),
+      type: form.attr('method'),
+      data: form.serialize(),
+      dataType: 'json',
+      beforeSend: function () {
+        $('#save-form-btn').val('保存中...');
+        $('#save-form-btn').attr('disabled','disabled');
+      },
+      success: function(res) {
+        if (res.success) {
+          $G.flash.flash('保存成功');
+          setTimeout(function () {
+            window.location.reload(); 
+          }, 1500);
+        } else {
+          $G.flash.flash(res.message.join(' '), 'warning');
+        }
+      },
+      complete: function() {
+        // $('#save-form-btn').val('保存');
+        // $('#save-form-btn').removeAttr('disabled');
+      },
+      error: function(){
+        $G.flash.flash('服务器发生错误，请联系管理员', 'danger');
+      },
+    });
+    return false;
+  });
+
+  $('#delete-group-btn').click(function() {
+    var isDelete = confirm('确认删除【{{ currentGroup.name }}】分组吗');
+    if (isDelete) {
+      $.ajax({
+        url: "{{ groupManageBaseURL ~ currentGroup.id }}",
+        type: 'delete',
+        dataType: 'json',
+        success: function(res) {
+          if (res.success) {
+            $G.flash.flash('删除成功');
+            setTimeout(function () {
+              window.location.reload(); 
+            }, 1500);
+          } else {
+            test = res
+            $G.flash.flash('删除失败: ' + res.message.join(', '), 'warning');
+          }
+        },
+        error: function() {
+          $G.flash.flash('服务器发生错误，请联系管理员', 'danger');
+        }
+      });2
+    }
+  });
+  {% endif %}
+
+  var aURL = '{{ urlFor("agenda.group_index[get]") }}';
+  var aTag = $('a[href="' + aURL + '"]');
+  aTag.parent('li').addClass('active');
+  aTag.parent('li').parent('ul').show();
+  $('.group-list-ul li').each(function() {
+    var obj = $(this);
+    if (obj.children('a').attr('data-id') == '{{ currentGroup.id }}') {
+      obj.addClass('active');
+    }
+  })
+});
+</script>
+{% endblock %}

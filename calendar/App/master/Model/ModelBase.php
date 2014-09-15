@@ -26,6 +26,12 @@ class ModelBase {
         }
     }
 
+    public function delete() {
+        $this->isDeleted = true;
+        $this->save();
+        self::flush();
+    }
+
     // 从 array 中赋值 property
     public function populateFromArray($array=array()) {
         foreach($array as $key => $value){
@@ -65,10 +71,24 @@ class ModelBase {
         return ORMManager::getEntityManager();
     }
 
-    public function delete() {
-        $this->isDeleted = true;
-        $this->save();
-        self::flush();
+    static public function getBy($key, $value) {
+        $query = static::query()->findOneBy(array($key => $value, 'isDeleted' => false));
+        return $query;
+    }
+
+    static public function getByArray($array) {
+        $query = static::query()->findOneBy(array_merge($array, array('isDeleted' => false)));
+        return $query;
+    }
+
+    static public function isExistBy($field, $value) {
+        $query = static::query()->findOneBy(array($field => $value, 'isDeleted' => false));
+        return $query != null;
+    }
+
+    static public function isExistByArray($array) {
+        $query = static::query()->findOneBy(array_merge($array, array('isDeleted' => false)));
+        return $query != null;
     }
 
     static public function paginate($page, $pagesize) {

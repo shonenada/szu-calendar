@@ -8,7 +8,7 @@ namespace Model;
  *
  * @property integer   $id
  * @property string    $type
- * @property integer   $teacherId
+ * @property integer   $ownerId
  * @property string    $name
  * @property string    $remark
  * @property datetime  $created
@@ -33,18 +33,25 @@ class AccountGroup extends ModelBase {
     public $type;
 
     /**
-     * @Column(name="teacher_id", type="integer")
+     * @Column(name="account_id", type="integer")
      **/
-    public $teacherId;
+    public $ownerId;
+
+    /**
+     * @ManyToOne(targetEntity="Account", inversedBy="accountGroups")
+     * @JoinColumn(name="account_id", referencedColumnName="id")
+     **/
+    public $owner;
 
     /**
      * @ManyToMany(targetEntity="Account")
      * @JoinTable(name="account_group_mapping",
-     *      joinColumns={@JoinColumn(name="student_id", referencedColumnName="id")},
+     *      joinColumns={@JoinColumn(name="account_id", referencedColumnName="id")},
      *      inverseJoinColumns={@JoinColumn(name="group_id", referencedColumnName="id")}
      * )
      **/
-    private $students;
+    public $accounts;
+
     /**
      * @Column(name="name", type="string")
      **/
@@ -71,7 +78,8 @@ class AccountGroup extends ModelBase {
     }
 
     static public function getUserGroup($user) {
-        $groups = AccountGroup::findBy(array('teacherId' => $user->id, 'isDeleted' => false));
+        $groups = AccountGroup::findBy(array('ownerId' => $user->id, 'isDeleted' => false));
         return $groups;
     }
+
 }
