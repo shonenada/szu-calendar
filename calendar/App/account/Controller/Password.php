@@ -52,6 +52,6 @@ class Password extends \Controller\BaseController {
             ->rule('confirm_password', 'max_length', array(':value', 20))
             ->rule('confirm_password', 'matches', array(':validation', 'confirm_password', 'new_password'));
         $validation->check();
-        return $validation->errors('account.msg');
+        return $validation->errors('chinese');
     }
 }

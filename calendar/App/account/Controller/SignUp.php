@@ -78,7 +78,7 @@ class SignUp extends \Controller\BaseController {
             ->rule('shortPhone', 'min_length', array(':value', 3))
             ->rule('shortPhone', 'max_length', array(':value', 6));
         $validation->check();
-        return $validation->errors('account.msg');
+        return $validation->errors('chinese');
     }
 
 }

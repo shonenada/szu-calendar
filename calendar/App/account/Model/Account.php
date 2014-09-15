@@ -166,7 +166,7 @@ class Account extends ModelBase {
     public $isAdmin;
 
     /**
-     * @OneToMany(targetEntity="Calendar", mappedBy="teacher")
+     * @OneToMany(targetEntity="Calendar", mappedBy="account")
      **/
     public $calendars;
 
@@ -302,16 +302,6 @@ class Account extends ModelBase {
         $salt = self::PASSWORD_SALT;
         $hash = md5("{$salt}{$password}{$salt}");
         return $hash;
-    }
-
-    static public function getBy($key, $value) {
-        $query = static::query()->findOneBy(array($key => $value, 'isDeleted' => false));
-        return $query;
-    }
-
-    static public function isExistBy($field, $value) {
-        $query = static::query()->findOneBy(array($field => $value, 'isDeleted' => false));
-        return $query != null;
     }
 
     static public function getRankName($rankNumber) {
