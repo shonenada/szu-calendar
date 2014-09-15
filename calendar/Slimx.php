@@ -144,22 +144,23 @@ class Slimx extends \Slim\Slim {
             $name = $this->generate_name($controller);
         }
 
+        $handlers = array();
+
         if (method_exists($controller, 'get')) 
-            $handler = $this->get($url, "$controller::_get")->name("${moduleName}.{$name}[get]");
+            $handlers['get'] = $this->get($url, "$controller::_get")->name("${moduleName}.{$name}[get]");
 
         if (method_exists($controller, 'post'))
-            $handler = $this->post($url, "$controller::_post")->name("${moduleName}.{$name}[post]");
+            $handlers['post'] = $this->post($url, "$controller::_post")->name("${moduleName}.{$name}[post]");
 
         if (method_exists($controller, 'put'))
-            $handler = $this->put($url, "$controller::_put")->name("${moduleName}.{$name}[put]");
+            $handlers['put'] = $this->put($url, "$controller::_put")->name("${moduleName}.{$name}[put]");
 
         if (method_exists($controller, 'delete'))
-            $handler = $this->delete($url, "$controller::_delete")->name("${moduleName}.{$name}[delete]");
+            $handlers['delete'] = $this->delete($url, "$controller::_delete")->name("${moduleName}.{$name}[delete]");
 
         if (array_key_exists('conditions', $vars)) {
-            $handler->conditions($vars['conditions']);
-            foreach ($vars['conditions'] as $key => $value) {
-                $resource = str_replace($key, $value, $resource);
+            foreach ($handlers as $method => $handler) {
+                $handler->conditions($vars['conditions']);
             }
         }
     }
@@ -167,6 +168,12 @@ class Slimx extends \Slim\Slim {
     private function _savePermission($vars) {
         $resource = preg_replace('/\/+/', '/', $vars['url']);
         $resource = $this->request->getRootUri() . preg_replace('/:[^\/]+/', '\S+', $resource);
+        
+        if (array_key_exists('conditions', $vars)) {
+            foreach ($vars['conditions'] as $key => $value) {
+                $resource = str_replace($key, $value, $resource);
+            }
+        }
 
         if (array_key_exists('allow', $vars)) {
             foreach ($vars['allow'] as $method => $roles) {
