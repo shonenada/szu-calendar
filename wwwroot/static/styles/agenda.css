@@ -1,9 +1,10 @@
 .group-list {
-swidth: 28%;
+  width: 28%;
   border: 1px solid #ddd;
 }
 
-.group-detail {
+.group-detail,
+.group-student-list {
   margin-left: 3%;
   width: 65%;
   border: 1px solid #ddd;
@@ -14,6 +15,13 @@ swidth: 28%;
   line-height: 40px;
   background: rgba(248,248,248,.9);
   padding: 0 20px;
+}
+
+.group-foot {
+  border-top: 1px solid #ddd;
+  background: rgba(248,248,248,.9);
+  padding: 0px 20px 10px 0;
+  overflow: hidden;
 }
 
 .group-ul li {
@@ -42,15 +50,14 @@ swidth: 28%;
   font-weight: bold;
 }
 
-.dialog-content #title {
-  width: 60%;
-  font-size: 14px;
+.student-list-item {
+  display: inline-block;
+  margin: 5px 10px 5px 20px;
+  cursor: pointer;
 }
 
-.dialog-content #description {
+.student-list-li label {
   width: 100%;
-  font-size: 14px;
-  padding: 3px;
-  line-height: 14px;
-  height: 100px;
+  cursor: inherit;
+  margin-left: 10px;
 }

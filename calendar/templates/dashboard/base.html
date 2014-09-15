@@ -52,11 +52,8 @@
         <li>
           <a href="javascript:void(0);" class="nav-dropdown">学生管理 <i class="arrow icon-angle-down"></i></a>
           <ul class="dropdown-navlist">
-          {% if user.hasPerm('agenda.group_manage[get]') %}
-            <li><a href="{{ urlFor('agenda.group_manage[get]') }}">分组管理</a></li>
-          {% endif %}
-          {% if user.hasPerm('agenda.student_group[get]') %}
-            <li><a href="{{ urlFor('agenda.student_group[get]') }}">学生分组</a></li>
+          {% if user.hasPerm('agenda.group_index[get]') %}
+            <li><a href="{{ urlFor('agenda.group_index[get]') }}">学生分组</a></li>
           {% endif %}
           </ul>
         </li>
@@ -114,7 +111,8 @@
         var liObj = $(this);
         if (liObj.children('a').attr('href') == window.location.pathname) {
           liObj.addClass('active');
-          ul.slideDown('fast');
+          ul.show();
+          return ;
         }
       });
     });

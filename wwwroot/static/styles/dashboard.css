@@ -247,6 +247,19 @@ body {
   line-height: 55px;
   padding: 0 20px;
 }
+
+.dialog-content .input-text {
+  width: 80%;
+  font-size: 14px;
+}
+.dialog-content .input-textarea {
+  width: 100%;
+  font-size: 14px;
+  padding: 3px;
+  line-height: 14px;
+  height: 100px;
+}
+
 span.datetime-format {
   color: #BC0000;
   border-radius: 3px;
