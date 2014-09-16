@@ -74,7 +74,7 @@ class AccountGroup extends ModelBase {
 
     public function __construct() {
         $this->isDeleted = false;
-        $this->student = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     static public function getUserGroup($user) {

@@ -11,6 +11,7 @@ class WorkArrangement extends \Controller\BaseController {
     );
 
     static public function get() {
+        $groups = \Model\AccountGroup::getUserGroup(self::$currentUser);
         return self::render('agenda/work_arrangement.html', get_defined_vars());
     }
 
@@ -27,10 +28,17 @@ class WorkArrangement extends \Controller\BaseController {
         if (isset($post['freeTime'])) {
             $freeTime = $post['freeTime'];
             foreach ($freeTime as $each) {
+                $visibleGroups = new \Doctrine\Common\Collections\ArrayCollection();
+                foreach ($each['visiableGroup'] as $gid) {
+                    $group = \Model\AccountGroup::find($gid);
+                    $visibleGroups[] = $group;
+                }
+
                 $calendar = new \Model\Calendar();
                 $calendar->type = \Model\Calendar::TYPE_FREE;
                 $calendar->account = self::$currentUser;
                 $calendar->title = $each['title'];
+                $calendar->visibleGroups = $visibleGroups;
                 $calendar->description = $each['description'];
                 $calendar->startTime = \DateTime::createFromFormat('Y-m-d H:i:s', $each['start']);
                 $calendar->endTime = \DateTime::createFromFormat('Y-m-d H:i:s', $each['end']);

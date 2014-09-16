@@ -61,3 +61,16 @@
   cursor: inherit;
   margin-left: 10px;
 }
+
+#visChosenList, #visList {
+  line-height: 1em;
+  margin-bottom: 5px;
+}
+
+#visChosenList span {
+  padding: 3px 8px;
+  background: #dc8374;
+  border-radius: 3px;
+  margin: 3px;
+  color: #fff;
+}

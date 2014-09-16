@@ -46,6 +46,15 @@ class Calendar extends ModelBase {
     public $description;
 
     /**
+     * @ManyToMany(targetEntity="AccountGroup")
+     * @JoinTable(name="calendar_group_mapping",
+     *      joinColumns={@JoinColumn(name="group_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@JoinColumn(name="calendar_id", referencedColumnName="id")}
+     * )
+     **/
+    public $visibleGroups;
+
+    /**
      * @Column(name="account_id", type="integer")
      **/
     public $accountId;
@@ -83,6 +92,15 @@ class Calendar extends ModelBase {
 
     public function __construct() {
         $this->isDeleted = false;
+        $this->visibleGroups = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    public function getVisibleGroupForFullCalendar() {
+        $output = array();
+        foreach ($this->visibleGroups->toArray() as $each) {
+            $output[] = $each->name;
+        }
+        return $output;
     }
 
     static public function convertForFullCalendar($calendarArr, $start, $end, $type) {
@@ -98,6 +116,7 @@ class Calendar extends ModelBase {
                 'id' => $one->id,
                 'title' => $one->title,
                 'description' => $one->description,
+                'visibleGroups' => $one->getVisibleGroupForFullCalendar(),
                 'start' => $one->startTime->format('Y-m-d\TH:i:s'),
                 'end' => $one->endTime->format('Y-m-d\TH:i:s'),
                 'color' => '#d15b47',

@@ -181,6 +181,8 @@ $(function(){
   $("#cancel-student-list-btn").click(function() {
     $('#student-list').slideUp('fast');
     $('#group-student-list').slideDown('fast');
+    $('#modify-list-btn').show();
+    $('#list-student-btn').hide();
   })
 
   $("#add-student-form").submit(function() {
