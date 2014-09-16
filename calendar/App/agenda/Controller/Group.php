@@ -35,7 +35,7 @@ class Group extends \Controller\BaseController {
             ));
         }
 
-        if ($group->account->id != self::$currentUser->id) {
+        if ($group->ownerId != self::$currentUser->id) {
             return json_encode(array(
                 'success' => false,
                 'message' => array('您无权限'),

@@ -38,8 +38,9 @@ class GroupIndex extends \Controller\BaseController {
 
         $remark = self::$request->post('remark');
         $group = new \Model\AccountGroup();
-        $group->account = self::$currentUser;
+        $group->owner = self::$currentUser;
         $group->name = $name;
+        $group->type = \Model\AccountGroup::TYPE_STUDENT_GROUP;
         $group->remark = $remark;
         $group->save();
         \Model\AccountGroup::flush();
