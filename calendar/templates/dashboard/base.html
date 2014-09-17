@@ -58,6 +58,14 @@
           </ul>
         </li>
         <li>
+          <a href="javascript:void(0);" class="nav-dropdown">预约管理 <i class="arrow icon-angle-down"></i></a>
+          <ul class="dropdown-navlist">
+          {% if user.hasPerm('agenda.student_appointment[get]') %}
+            <li><a href="{{ urlFor('agenda.student_appointment[get]') }}">预约教师</a></li>
+          {% endif %}
+          </ul>
+        </li>
+        <li>
           <a href="javascript:void(0);" class="nav-dropdown">账户管理 <i class="arrow icon-angle-down"></i></a>
           <ul class="dropdown-navlist">
             <li><a href="{{ urlFor('account.profile[get]') }}">个人信息</a></li>
