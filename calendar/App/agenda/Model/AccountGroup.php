@@ -44,13 +44,18 @@ class AccountGroup extends ModelBase {
     public $owner;
 
     /**
-     * @ManyToMany(targetEntity="Account")
+     * @ManyToMany(targetEntity="Account", mappedBy="stuGroups")
+     **/
+    public $accounts;
+
+    /**
+     * @ManyToMany(targetEntity="Calendar", inversedBy="visibleGroups")
      * @JoinTable(name="account_group_mapping",
      *      joinColumns={@JoinColumn(name="account_id", referencedColumnName="id")},
      *      inverseJoinColumns={@JoinColumn(name="group_id", referencedColumnName="id")}
      * )
      **/
-    public $accounts;
+    public $calendars;
 
     /**
      * @Column(name="name", type="string")
@@ -75,6 +80,7 @@ class AccountGroup extends ModelBase {
     public function __construct() {
         $this->isDeleted = false;
         $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->calendars = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     static public function getUserGroup($user) {

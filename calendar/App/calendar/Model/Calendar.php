@@ -46,7 +46,7 @@ class Calendar extends ModelBase {
     public $description;
 
     /**
-     * @ManyToMany(targetEntity="AccountGroup")
+     * @ManyToMany(targetEntity="AccountGroup" , inversedBy="calendars")
      * @JoinTable(name="calendar_group_mapping",
      *      joinColumns={@JoinColumn(name="group_id", referencedColumnName="id")},
      *      inverseJoinColumns={@JoinColumn(name="calendar_id", referencedColumnName="id")}
@@ -103,29 +103,60 @@ class Calendar extends ModelBase {
         return $output;
     }
 
-    static public function convertForFullCalendar($calendarArr, $start, $end, $type) {
-        $calendarArr = array_filter($calendarArr, function($one) use($start, $end, $type) {
-            return ($one->startTime->getTimestamp() >= $start
-                    && $one->endTime->getTimestamp() <= $end
-                    && $one->type == $type
-                    && $one->isDeleted == false);
-        });
+    static private function convertForFullCalendar($calendarArray, $args = array(), $patch = null) {
+        $default = array(
+            'color' => '#d15b47',
+            'editable' => false,
+            'startEditable' => false,
+            'durationEditable' => false,
+        );
+
+        $args = array_merge($default, $args);
+
         $output = array();
-        foreach($calendarArr as $one) {
-            $output[] = array(
+        foreach($calendarArray as $one) {
+            $insert = array(
                 'id' => $one->id,
                 'title' => $one->title,
-                'description' => $one->description,
-                'visibleGroups' => $one->getVisibleGroupForFullCalendar(),
                 'start' => $one->startTime->format('Y-m-d\TH:i:s'),
                 'end' => $one->endTime->format('Y-m-d\TH:i:s'),
-                'color' => '#d15b47',
-                'editable' => true,
-                'startEditable' => false,
-                'durationEditable' => false,
+                'color' => $args['color'],
+                'editable' => $args['editable'],
+                'startEditable' => $args['startEditable'],
+                'durationEditable' => $args['durationEditable'],
             );
+            if ($patch)
+                $insert = $patch($insert, $one);
+            $output[] = $insert;
         }
         return $output;
+    }
+
+    static public function getStudentVisiableCalendar($student, $start, $end) {
+        $stuGroups = $student->stuGroups->toArray();
+        $calendars = array();
+        foreach ($stuGroups as $group) {
+            $calendars = array_merge($calendars, $group->calendars->toArray());
+        }
+        return self::convertForFullCalendar($calendars);
+    }
+
+    static public function getArrangementJson($calendarArr, $start, $end, $type = null) {
+        $calendarArr = array_filter($calendarArr, function($one) use($start, $end, $type) {
+            $ret = ($one->startTime->getTimestamp() >= $start
+                    && $one->endTime->getTimestamp() <= $end
+                    && $one->isDeleted == false);
+            if ($type != null) {
+                return $ret && $one->type == $type;
+            } else {
+                return $ret;
+            }
+        });
+        return self::convertForFullCalendar($calendarArr, array(), function ($arr, $one) {
+            $arr['visibleGroups'] = $one->getVisibleGroupForFullCalendar();
+            $arr['description'] = $one->description;
+            return $arr;
+        });
     }
 
 }

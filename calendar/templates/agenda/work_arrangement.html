@@ -164,29 +164,29 @@ $(function() {
   });
 
   var showEventDetailDialog = function(calEvent, jsEvent, view) {
-    currentClickEvent = event;
+    currentClickEvent = calEvent;
     $('.dialog-foot-div').hide();
     $('#show-event-dialog-foot').show();
     $('.dialog-foot').show();
-    $('.dialog-title-content').html(event.title);
+    $('.dialog-title-content').html(calEvent.title);
     var content = $('<div></div>');
     var startDiv = $('<span></span>')
                     .addClass('datetime-format')
-                    .append(event.start.format('YYYY-MM-DD HH:mm:ss'));
+                    .append(calEvent.start.format('YYYY-MM-DD HH:mm:ss'));
     var endDiv = $('<span></span>')
                     .addClass('datetime-format')
-                    .append(event.end.format('YYYY-MM-DD HH:mm:ss'));
+                    .append(calEvent.end.format('YYYY-MM-DD HH:mm:ss'));
 
     var visDiv = $('<div id="visiDiv"></div>');
     var visChosenList = $('<div id="visChosenList"></div>');
-    for(idx in event.visibleGroups) {
-      visChosenList.append('<span>' + event.visibleGroups[idx] + '</span>');
+    for(idx in calEvent.visibleGroups) {
+      visChosenList.append('<span>' + calEvent.visibleGroups[idx] + '</span>');
     }
     visDiv.append('可见分组：').append(visChosenList);
 
     content.append($('<div>时间：</div>').append(startDiv).append(' ~ ').append(endDiv))
            .append(visDiv)
-           .append($('<div>工作简述：</div>').append(event.description));
+           .append($('<div>工作简述：</div>').append(calEvent.description));
     $('.dialog-content').html(content);
     $('.dialog').fadeIn();
     $('.mash').fadeIn();
