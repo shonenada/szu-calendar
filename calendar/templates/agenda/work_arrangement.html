@@ -64,35 +64,6 @@ $(function() {
     $('.mash').fadeIn();
   }
 
-  var showEventDetailDialog = function(event) {
-    currentClickEvent = event;
-    $('.dialog-foot-div').hide();
-    $('#show-event-dialog-foot').show();
-    $('.dialog-foot').show();
-    $('.dialog-title-content').html(event.title);
-    var content = $('<div></div>');
-    var startDiv = $('<span></span>')
-                    .addClass('datetime-format')
-                    .append(event.start.format('YYYY-MM-DD HH:mm:ss'));
-    var endDiv = $('<span></span>')
-                    .addClass('datetime-format')
-                    .append(event.end.format('YYYY-MM-DD HH:mm:ss'));
-
-    var visDiv = $('<div id="visiDiv"></div>');
-    var visChosenList = $('<div id="visChosenList"></div>');
-    for(idx in event.visibleGroups) {
-      visChosenList.append('<span>' + event.visibleGroups[idx] + '</span>');
-    }
-    visDiv.append('可见分组：').append(visChosenList);
-
-    content.append($('<div>时间：</div>').append(startDiv).append(' ~ ').append(endDiv))
-           .append(visDiv)
-           .append($('<div>工作简述：</div>').append(event.description));
-    $('.dialog-content').html(content);
-    $('.dialog').fadeIn();
-    $('.mash').fadeIn();
-  }
-
   var showAddEventDialog = function(start, end, allDay, view) {
     $('.dialog-foot-div').hide();
     $('#add-event-dialog-foot').show();
@@ -185,14 +156,40 @@ $(function() {
   $('.dialog-btn-close').click(function(){
     hideDialog();
   });
+
   $('.dialog-btn-delete').click(function(){
     if(currentClickEvent) {
       removeEvent(currentClickEvent);
     }
   });
 
-  var showEvent = function(calEvent, jsEvent, view) {
-    showEventDetailDialog(calEvent);
+  var showEventDetailDialog = function(calEvent, jsEvent, view) {
+    currentClickEvent = event;
+    $('.dialog-foot-div').hide();
+    $('#show-event-dialog-foot').show();
+    $('.dialog-foot').show();
+    $('.dialog-title-content').html(event.title);
+    var content = $('<div></div>');
+    var startDiv = $('<span></span>')
+                    .addClass('datetime-format')
+                    .append(event.start.format('YYYY-MM-DD HH:mm:ss'));
+    var endDiv = $('<span></span>')
+                    .addClass('datetime-format')
+                    .append(event.end.format('YYYY-MM-DD HH:mm:ss'));
+
+    var visDiv = $('<div id="visiDiv"></div>');
+    var visChosenList = $('<div id="visChosenList"></div>');
+    for(idx in event.visibleGroups) {
+      visChosenList.append('<span>' + event.visibleGroups[idx] + '</span>');
+    }
+    visDiv.append('可见分组：').append(visChosenList);
+
+    content.append($('<div>时间：</div>').append(startDiv).append(' ~ ').append(endDiv))
+           .append(visDiv)
+           .append($('<div>工作简述：</div>').append(event.description));
+    $('.dialog-content').html(content);
+    $('.dialog').fadeIn();
+    $('.mash').fadeIn();
   }
 
   var addEvent = function(eventData) {
@@ -269,7 +266,7 @@ $(function() {
       freeTime.splice(0, freeTime.length);
       deleteTime.splice(0, deleteTime.length);
       $.ajax({
-        url: "{{ urlFor('agenda.free_time_json[get]') }}",
+        url: "{{ urlFor('agenda.arrangement_timetable_json[get]') }}",
         type: 'get',
         dataType: 'json',
         data: {
@@ -305,7 +302,7 @@ $(function() {
         alert('无法删除');
         return ;
       }
-      showEvent(calEvent, jsEvent, view);
+      showEventDetailDialog(calEvent, jsEvent, view);
     },
   });
 
