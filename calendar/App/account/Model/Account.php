@@ -171,12 +171,14 @@ class Account extends ModelBase {
     public $calendars;
 
     /**
-     * @ManyToMany(targetEntity="AccountGroup", inversedBy="accounts")
-     * @JoinTable(name="account_group_mapping",
-     *      joinColumns={@JoinColumn(name="account_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="group_id", referencedColumnName="id")})
+     * @ManyToMany(targetEntity="AccountGroup", mappedBy="accounts")
      **/
     public $stuGroups;
+
+    /**
+     * @OneToMany(targetEntity="Appointment", mappedBy="account")
+     **/
+    public $appointments;
 
     /**
      * @Column(name="is_active", type="boolean")
@@ -193,6 +195,7 @@ class Account extends ModelBase {
         $this->isAdmin = false;
         $this->isDeleted = false;
         $this->calendars = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->appointments = new \Doctrine\Common\Collections\ArrayCollection();
         $this->stuGroups = new \Doctrine\Common\Collections\ArrayCollection();
     }
 

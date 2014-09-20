@@ -44,16 +44,15 @@ class AccountGroup extends ModelBase {
     public $owner;
 
     /**
-     * @ManyToMany(targetEntity="Account", mappedBy="stuGroups")
+     * @ManyToMany(targetEntity="Account", inversedBy="stuGroups")
+     * @JoinTable(name="account_group_mapping",
+     *      joinColumns={@JoinColumn(name="account_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@JoinColumn(name="group_id", referencedColumnName="id")})
      **/
     public $accounts;
 
     /**
-     * @ManyToMany(targetEntity="Calendar", inversedBy="visibleGroups")
-     * @JoinTable(name="account_group_mapping",
-     *      joinColumns={@JoinColumn(name="account_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="group_id", referencedColumnName="id")}
-     * )
+     * @ManyToMany(targetEntity="Calendar", mappedBy="visibleGroups")
      **/
     public $calendars;
 
