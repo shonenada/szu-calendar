@@ -7,6 +7,7 @@
 
 {% block body %}
 <div id="main">
+  <h2 class="title">深圳大学高等研究院预约管理平台</h2>
   <form method="post" action="{{ urlFor('account.sign_in[post]') }}" id="signin-form" class="style-form">
     <div id="signin-box" class="box-with-border">
       <div id="signin-box-header" class="box-header">普通登录</div>
@@ -29,6 +30,7 @@
   <div class="align-center">
     <a href="https://auth.szu.edu.cn/cas.aspx/signin?service=http://ias.szu.edu.cn{{ urlFor('account.cas[get]') }}" class="btn btn-large-width btn-success">深圳大学统一认证登录</a>
   </div>
+  <div class="copyright">深圳大学高等研究院 2014</div>
 </div>
 {% endblock %}
 {% block bodyfoot %}

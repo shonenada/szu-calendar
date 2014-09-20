@@ -13,3 +13,14 @@ body#cas #main {
     width: 400px;
     margin: 0 auto;
 }
+
+.title {
+    text-align: center;
+}
+
+.copyright {
+    font-size: 12px;
+    text-align: center;
+    color: #333;
+    margin-top: 20px;
+}

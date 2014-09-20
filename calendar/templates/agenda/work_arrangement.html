@@ -77,7 +77,7 @@ $(function() {
     $('.dialog-foot-div').hide();
     $('.dialog-foot').show();
     $('#add-event-dialog-foot').show();
-    $('.dialog-title-content').html('添加安排');
+    $('.dialog-title-content').html('添加工作安排');
     if (prevTitle || prevPlace || prevDescription) {
       $('.dialog-title-content').append(' <a href="javascript:void(0);" id="use-history-btn" class="btn-link">使用历史</a>');
     }
@@ -265,8 +265,6 @@ $(function() {
   var y = date.getFullYear();
 
   calendar = $('#calendar').fullCalendar({
-    firstDay: 0,
-    weekends: false,
     lang: 'zh-cn',
     header: {
       left: 'prev,next,today',
@@ -275,8 +273,8 @@ $(function() {
     },
     height: 'auto',
     allDaySlot: false,
-    minTime: '08:00:00',
-    maxTime: '18:00:00',
+    minTime: '07:00:00',
+    maxTime: '23:00:00',
     slotDuration: '00:15:00',
     defaultView: 'agendaWeek',
     defaultDate: y + '-' + (m+1) + '-' + (d+1),
