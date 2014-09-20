@@ -230,26 +230,31 @@ body {
 
 .dialog-title {
   font-weight: bold;
-  font-size: 20px;
+  font-size: 16px;
   border-bottom: 1px solid #d5d5d5;
-  padding: 20px;
+  padding: 15px 20px;
+}
+
+.dialog-title .btn-link {
+  font-size: 12px;
 }
 
 .dialog-content {
-  padding: 20px 30px;
+  font-size: 14px;
+  padding: 15px 25px;
   line-height: 2.5em;
   border-bottom: 1px solid #d5d5d5;
 }
 
 .dialog-foot {
   background: #eff3f8;
-  height: 70px;
-  line-height: 55px;
+  height: 50px;
   padding: 0 20px;
 }
 
 .dialog-content .input-text {
   width: 80%;
+  padding: 3px;
   font-size: 14px;
 }
 .dialog-content .input-textarea {

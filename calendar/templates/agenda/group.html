@@ -134,7 +134,7 @@ $(function(){
             $G.flash.flash('添加成功');
             hideDialog();
             setTimeout(function () {
-              window.location.reload(); 
+              window.location.reload();
             }, 1500);
           } else {
             $G.flash.flash(res.message.join(' '), 'warning');
@@ -207,8 +207,8 @@ $(function(){
         }
       },
       complete: function() {
-        // $('#save-form-btn').val('保存');
-        // $('#save-form-btn').removeAttr('disabled');
+        $('#save-form-btn').val('保存');
+        $('#save-form-btn').removeAttr('disabled');
       },
       error: function(){
         $G.flash.flash('服务器发生错误，请联系管理员', 'danger');

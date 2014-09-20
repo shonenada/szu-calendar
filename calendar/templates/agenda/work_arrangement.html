@@ -39,11 +39,10 @@
   </div>
   </form>
 </div>
-
 <div id="calendar"></div>
 
 <div class="pull-right" style="margin-bottom: 20px;">
-  <button type="button" class="btn btn-success" id="saveAgenda">保存</button>
+  <button type="button" class="btn btn-success saveAgenda">保存</button>
 </div>
 {% endblock %}
 
@@ -55,6 +54,7 @@
 $(function() {
   var currentClickEvent = null;
   var prevTitle = '';
+  var prevPlace = '';
   var prevDescription = '';
   var showTipDialog = function(title, content) {
     $('.dialog-foot').hide();
@@ -64,16 +64,32 @@ $(function() {
     $('.mash').fadeIn();
   }
 
+  var showDetailEventFooter = function(patch) {
+    $('.dialog-btn-delete').html('删除').removeAttr('disabled');
+    $('.dialog-btn-delete').show();
+    $('.dialog-btn-close').show();
+    $('#show-event-dialog-foot').show();
+    if (typeof patch != 'undefined')
+      patch();
+  }
+
   var showAddEventDialog = function(start, end, allDay, view) {
     $('.dialog-foot-div').hide();
-    $('#add-event-dialog-foot').show();
     $('.dialog-foot').show();
+    $('#add-event-dialog-foot').show();
     $('.dialog-title-content').html('添加安排');
+    if (prevTitle || prevPlace || prevDescription) {
+      $('.dialog-title-content').append(' <a href="javascript:void(0);" id="use-history-btn" class="btn-link">使用历史</a>');
+    }
     var content = $('<div></div>');
 
     var titleDiv = $("<div></div>");
-    var titleInput = $('<input type="text" id="title" class="input-text" />').val(prevTitle);
+    var titleInput = $('<input type="text" id="title" class="input-text" />');
     titleDiv.append('标题：').append(titleInput);
+
+    var placeDiv = $('<div></div>');
+    var placeInput = $('<input type="text" id="place" class="input-text" />');
+    placeDiv.append('地点：').append(placeInput);
 
     var timeDiv = $("<div></div>");
     var startDiv = $('<span></span>')
@@ -85,52 +101,37 @@ $(function() {
     timeDiv.append('时间段：').append(startDiv).append(' ~ ').append(endDiv);
 
     var visDiv = $('<div id="visiDiv"></div>');
-    var addVisiGroupBtn = $('<a id="addVisiGroup" class="btn-link btn-xs" href="javascript:void(0)">添加</a>');
-    var closeVisiGroupBtn = $('<a id="closeVisiGroup"  class="btn-link btn-xs" style="display: none;" href="javascript:void(0)">完成</a>');
-    var visChosenList = $('<div id="visChosenList"></div>');
-    var visList = $('<div id="visList" style="display: none;"></div>');
+    visDiv.append('可见分组：');
     {% for group in groups %}
-    visList.append(
+    visDiv.append(
       $('<label></label>').append(
-        $('<input type="checkbox" name="visibleGroup" class="visibleGroupCheckbox" value="{{ group.id }}" data-name="{{ group.name }}" />').click(function (){
-          if ($(this).is(":checked") == true) {
-            visChosenList.append('<span id="chosen-{{ group.id }}">{{ group.name }}</span>');
-          } else {
-            $('#chosen-{{ group.id }}').remove();
-          }
-        })
+        $('<input type="checkbox" name="visibleGroup" class="visibleGroupCheckbox" value="{{ group.id }}" data-name="{{ group.name }}" />')
       ).append('{{ group.name }}')
     );
     {% endfor %}
-    visDiv.append('可见分组：').append(addVisiGroupBtn).append(closeVisiGroupBtn).append(visChosenList).append(visList);
+
 
     var descriptionDiv = $('<div></div>');
-    var textarea = $('<textarea id="description" class="input-textarea"></textarea>').val(prevDescription);
-    descriptionDiv.append('工作简述：<br />').append(textarea);
+    var textarea = $('<textarea id="description" class="input-textarea"></textarea>');
+    descriptionDiv.append('简述：<br />').append(textarea);
 
-    content.append(titleDiv).append(timeDiv).append(visDiv).append(descriptionDiv);
+    content.append(titleDiv).append(placeDiv).append(timeDiv).append(visDiv).append(descriptionDiv);
     $('.dialog-content').html(content);
     $('.dialog').fadeIn();
     $('.mash').fadeIn();
 
-    $('#addVisiGroup').click(function() {
-      $(this).hide();
-      $('#closeVisiGroup').show();
-      $('#visList').slideDown('fast');
-      $('#visChosenList').slideUp('fast');
-    });
-
-    $('#closeVisiGroup').click(function() {
-      $(this).hide();
-      $('#addVisiGroup').show();
-      $('#visList').slideUp('fast');
-      $('#visChosenList').slideDown('fast');
+    $('#use-history-btn').unbind();
+    $('#use-history-btn').click(function() {
+      $('#title').val(prevTitle);
+      $('#place').val(prevPlace);
+      $('#description').val(prevDescription);
     });
 
     $('.dialog-btn-confirm').unbind();
     $('.dialog-btn-confirm').click(function(){
       var chosenGroup = [];
       prevTitle = $('#title').val();
+      prevPlace = $('#place').val();
       prevDescription = $('#description').val();
       $('.visibleGroupCheckbox').each(function () {
         if ($(this).is(":checked") == true) {
@@ -139,6 +140,7 @@ $(function() {
       });
       var eventData = {
         title: $('#title').val(),
+        place: $('#place').val(),
         description: $('#description').val(),
         visiableGroup: chosenGroup,
         start: start,
@@ -167,6 +169,11 @@ $(function() {
     currentClickEvent = calEvent;
     $('.dialog-foot-div').hide();
     $('#show-event-dialog-foot').show();
+    showDetailEventFooter(function() {
+      if (!calEvent.editable) {
+        $('.dialog-btn-delete').html('已被预约').attr('disabled', 'disabled');
+      }
+    })
     $('.dialog-foot').show();
     $('.dialog-title-content').html(calEvent.title);
     var content = $('<div></div>');
@@ -226,6 +233,7 @@ $(function() {
     freeTime.push({
       title: eventData.title,
       description: eventData.description,
+      place: eventData.place,
       visiableGroup: eventData.visiableGroup,
       start: eventData.start.format('YYYY-MM-DD HH:mm:ss'),
       end: eventData.end.format('YYYY-MM-DD HH:mm:ss')
@@ -253,7 +261,7 @@ $(function() {
     allDaySlot: false,
     minTime: '08:00:00',
     maxTime: '18:00:00',
-    slotDuration: '00:05:00',
+    slotDuration: '00:15:00',
     defaultView: 'agendaWeek',
     defaultDate: y + '-' + (m+1) + '-' + (d+1),
     editable: true,
@@ -298,15 +306,11 @@ $(function() {
       showAddEventDialog(start, end, allDay, view);
     },
     eventClick: function (calEvent, jsEvent, view) {
-      if (calEvent.editable == false) {
-        alert('无法删除');
-        return ;
-      }
       showEventDetailDialog(calEvent, jsEvent, view);
     },
   });
 
-  $('#saveAgenda').click(function (){
+  $('.saveAgenda').click(function (){
     if (!freeTime.length > 0 && !deleteTime.length > 0) {
       return ;
     }
@@ -342,6 +346,11 @@ $(function() {
       }
     });
   });
+
+  window.onbeforeunload = function(){
+  if (freeTime.length > 0 || deleteTime.length > 0)
+    return "您未保存修改，确定离开页面吗？";
+  }
 });
 </script>
 {% endblock %}

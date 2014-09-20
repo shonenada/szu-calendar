@@ -27,12 +27,8 @@
   <div class="dialog-content"></div>
   <div class="dialog-foot">
     <div class="pull-right">
-      <div id="show-event-dialog-foot" class="dialog-foot-div">
-        <a href="javascript:void(0);" class="btn btn-danger dialog-btn-delete">删除</a>
-        <a href="javascript:void(0);" class="btn btn-primary dialog-btn-close">关闭</a>
-      </div>
-      <div id="add-event-dialog-foot" class="dialog-foot-div">
-        <a href="javascript:void(0);" class="btn btn-primary dialog-btn-confirm">添加</a>
+      <div id="add-appointment-dialog-foot" class="dialog-foot-div">
+        <a href="javascript:void(0);" class="btn btn-primary dialog-btn-confirm">预约</a>
         <a href="javascript:void(0);" class="btn btn-info dialog-btn-close">关闭</a>
       </div>
     </div>
@@ -41,10 +37,6 @@
 </div>
 
 <div id="calendar"></div>
-
-<div class="pull-right" style="margin-bottom: 20px;">
-  <button type="button" class="btn btn-success" id="saveAgenda">保存</button>
-</div>
 {% endblock %}
 
 {% block bodyfoot %}
@@ -54,37 +46,83 @@
 <script type="text/javascript">
 $(function() {
   var hideDialog = function() {
-    $('.dialog').fadeOut();
-    $('.mash').fadeOut();
+    $('.dialog').fadeOut('fast');
+    $('.mash').fadeOut('fast');
   }
 
-  var showEventDetailDialog = function(calEvent, jsEvent, view) {
-    currentClickEvent = event;
+  var showAppointmentDialog = function(calEvent, jsEvent, view) {
+    currentClickEvent = calEvent;
     $('.dialog-foot-div').hide();
-    $('#show-event-dialog-foot').show();
+    $('#add-appointment-dialog-foot').show();
     $('.dialog-foot').show();
-    $('.dialog-title-content').html(event.title);
+    $('.dialog-title-content').html('预约教师 (' + calEvent.teacherName + ')');
     var content = $('<div></div>');
+
     var startDiv = $('<span></span>')
                     .addClass('datetime-format')
-                    .append(event.start.format('YYYY-MM-DD HH:mm:ss'));
+                    .append(calEvent.start.format('YYYY-MM-DD HH:mm:ss'));
     var endDiv = $('<span></span>')
                     .addClass('datetime-format')
-                    .append(event.end.format('YYYY-MM-DD HH:mm:ss'));
+                    .append(calEvent.end.format('YYYY-MM-DD HH:mm:ss'));
 
-    var visDiv = $('<div id="visiDiv"></div>');
-    var visChosenList = $('<div id="visChosenList"></div>');
-    for(idx in event.visibleGroups) {
-      visChosenList.append('<span>' + event.visibleGroups[idx] + '</span>');
+
+    var additionalInfo = $('<div></div>');
+    if (calEvent.remark) {
+      additionalInfo.append('附加信息: ').append($('<div></div>').append(calEvent.remark));
     }
-    visDiv.append('可见分组：').append(visChosenList);
 
-    content.append($('<div>时间：</div>').append(startDiv).append(' ~ ').append(endDiv))
-           .append(visDiv)
-           .append($('<div>工作简述：</div>').append(event.description));
+    var leaveMessage = $('<div></div>');
+    leaveMessage.append('留言给教师：').append($('<div></div>').append('<textarea id="remark" class="input-textarea"></textarea>'));
+
+    content.append($('<div>预约时间：</div>').append(startDiv).append(' ~ ').append(endDiv));
+    content.append(additionalInfo);
+    content.append(leaveMessage);
     $('.dialog-content').html(content);
-    $('.dialog').fadeIn();
-    $('.mash').fadeIn();
+    $('.dialog').fadeIn('fast');
+    $('.mash').fadeIn('fast');
+
+    $('.dialog-btn-confirm').unbind();
+    $('.dialog-btn-confirm').click(function(){
+      var timer;
+      var cid = calEvent.id;
+      var start = calEvent.start.format('YYYY-MM-DD HH:mm:ss');
+      var end = calEvent.end.format('YYYY-MM-DD HH:mm:ss');
+      var remark = $('#remark').val();
+      $.ajax({
+        url: '{{ urlFor("agenda.student_appointment[post]") }}',
+        type: 'post',
+        dataType: 'json',
+        cache: false,
+        data: {
+          cid: cid,
+          remark: remark,
+          start: start,
+          end: end,
+        },
+        beforeSend: function(){
+          timer = setTimeout(function(){
+            showTipDialog('数据发送中', '数据发送中，请耐心等候..');
+          }, 500);
+        },
+        success: function (res) {
+          if (res.success) {
+            clearTimeout(timer);
+            hideDialog();
+            $G.flash.flash('预约成功', 'success');
+            setTimeout(function(){
+              window.location.reload();
+            }, 1500);
+          } else {
+            showTipDialog('预约失败', res.messages.join(', '));
+          }
+        },
+        error: function(res) {
+          clearTimeout(timer);
+          hideDialog();
+          $G.flash.flash('服务器发生错误，请联系管理员', 'danger');
+        }
+      });
+    });
   }
 
  var showTipDialog = function(title, content) {
@@ -94,6 +132,10 @@ $(function() {
     $('.dialog').fadeIn();
     $('.mash').fadeIn();
   }
+
+  $('.dialog-btn-close').click(function() {
+    hideDialog();
+  })
 
   var date = new Date();
   var d = date.getDate();
@@ -113,7 +155,7 @@ $(function() {
     allDaySlot: false,
     minTime: '08:00:00',
     maxTime: '18:00:00',
-    slotDuration: '00:05:00',
+    slotDuration: '00:15:00',
     defaultView: 'agendaWeek',
     defaultDate: y + '-' + (m+1) + '-' + (d+1),
     editable: false,
@@ -124,7 +166,7 @@ $(function() {
       var timer;
       $('#calendar').fullCalendar('removeEvents');
       $.ajax({
-        url: "{{ urlFor('agenda.appoinment_timetable_json[get]') }}",
+        url: "{{ urlFor('agenda.appointment_timetable_json[get]') }}",
         type: 'get',
         dataType: 'json',
         data: {
@@ -149,7 +191,12 @@ $(function() {
       });
     },
     eventClick: function (calEvent, jsEvent, view) {
-      showEventDetailDialog(calEvent, jsEvent, view);
+      if (calEvent.mine) {
+        return showAppointmentDetail(calEvent, jsEvent, view);
+      }
+      if (calEvent.canAppoint) {
+        showAppointmentDialog(calEvent, jsEvent, view);
+      }
     },
   });
 });
