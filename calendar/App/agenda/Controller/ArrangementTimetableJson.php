@@ -10,7 +10,6 @@ class ArrangementTimetableJson extends \Controller\BaseController {
     );
 
     static public function get() {
-        self::requiredRole('Teacher');
         $start = self::$request->get('start');
         $end = self::$request->get('end');
         $arrangement = self::$currentUser->calendars;

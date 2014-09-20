@@ -23,6 +23,29 @@ namespace Model;
 class Calendar extends ModelBase {
 
     const TYPE_FREE = 'FREETIME';
+    static public $presetColor = array(
+        'red' => array(
+            'color' => '#d15b47',
+            'textColor' => '#fff',
+        ),
+        'gray' => array(
+            'color' => '#b0b0b0',
+            'textColor' => '#fff',
+        ),
+        'green' => array(
+            'color' => '#1ba15f',
+            'textColor' => '#fff',
+        ),
+        'blue' => array(
+            'color' => '#3A87AD',
+            'textColor' => '#fff',
+        ),
+        'yellow' => array(
+            'color' => '#D19C47',
+            'textColor' => '#fff',
+        ),
+    );
+    static public $defatulColor = 'blue';
 
     /**
      * @Column(name="id", type="integer", nullable=false)
@@ -166,7 +189,8 @@ class Calendar extends ModelBase {
 
     static public function convertForFullCalendar($calendarArray, $inputArgs = array(), $patch = null) {
         $defaultArgs = array(
-            'color' => '#d15b47',
+            'color' => static::$presetColor[static::$defatulColor]['color'],
+            'textColor' => static::$presetColor[static::$defatulColor]['textColor'],
             'editable' => false,
             'startEditable' => false,
             'durationEditable' => false,
@@ -182,6 +206,7 @@ class Calendar extends ModelBase {
                 'start' => $one->startTime->format('Y-m-d\TH:i:s'),
                 'end' => $one->endTime->format('Y-m-d\TH:i:s'),
                 'color' => $args['color'],
+                'textColor' => $args['textColor'],
                 'editable' => $args['editable'],
                 'startEditable' => $args['startEditable'],
                 'durationEditable' => $args['durationEditable'],
@@ -237,11 +262,23 @@ class Calendar extends ModelBase {
             }
         });
         if ($args['convert']) {
-            return self::convertForFullCalendar($calendarArr, array(), function ($insert, $one) {
+            $args = array(
+                'color' => static::$presetColor['red']['color'],
+                'textColor' => static::$presetColor['red']['textColor'],
+            );
+            return self::convertForFullCalendar($calendarArr, $args, function ($insert, $one) {
                 if ($one->appointment) {
                     $insert['editable'] = false;
+                    $insert['hasAppointment'] = true;
+                    $insert['appointmentAccountName'] = $one->appointment->account->name;
+                    $insert['appointmentAccountPhone'] = $one->appointment->account->phone;
+                    $insert['appointmentAccountShortPhone'] = $one->appointment->account->shortPhone;
+                    $insert['appointmentAccountEmail'] = $one->appointment->account->email;
+                    $insert['color'] = static::$presetColor['yellow']['color'];
                 } else {
                     $insert['editable'] = true;
+                    $insert['hasAppointment'] = false;
+                    $insert['color'] = static::$presetColor['red']['color'];
                 }
                 $insert['visibleGroups'] = $one->getVisibleGroupsName();
                 $insert['description'] = $one->description;
@@ -250,6 +287,21 @@ class Calendar extends ModelBase {
         } else {
             return $calendarArr;
         }
+    }
+
+    static public function getTeacherAppointment($teacherAccount) {
+        $appointments = array();
+        $now = new \DateTime();
+        $calendars = $teacherAccount->calendars;
+        foreach ($calendars as $cls) {
+            if ($cls->startTime > $now && $cls->appointment) {
+                $appointments[] = $cls->appointment;
+            }
+        }
+        usort($appointments, function($one, $two) {
+            return $one->startTime < $two->startTime;
+        });
+        return $appointments;
     }
 
 }

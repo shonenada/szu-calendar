@@ -37,15 +37,15 @@
     <div id="aside">
       <div class="aside-topbar">欢迎使用</div>
       <ul class="nav-list">
-        <li><a href="{{ urlFor('master.dashboard[get]') }}">控制台</a></li>
+        <!-- <li><a href="{{ urlFor('master.dashboard[get]') }}">控制台</a></li> -->
         <li>
           <a href="javascript:void(0);" class="nav-dropdown">日程安排 <i class="arrow icon-angle-down"></i></a>
           <ul class="dropdown-navlist">
             {% if user.hasPerm('agenda.work_arrangement[get]') %}
             <li><a href="{{ urlFor('agenda.work_arrangement[get]') }}">工作安排</a></li>
             {% endif %}
-            {% if user.hasPerm('agenda.view_mine[get]') %}
-            <li><a href="{{ urlFor('agenda.view_mine[get]') }}">查看预约</a></li>
+            {% if user.hasPerm('agenda.view_appointment[get]') %}
+            <li><a href="{{ urlFor('agenda.view_appointment[get]') }}">查看预约</a></li>
             {% endif %}
           </ul>
         </li>

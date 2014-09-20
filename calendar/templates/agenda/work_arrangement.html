@@ -170,7 +170,7 @@ $(function() {
     $('.dialog-foot-div').hide();
     $('#show-event-dialog-foot').show();
     showDetailEventFooter(function() {
-      if (!calEvent.editable) {
+      if (calEvent.hasAppointment) {
         $('.dialog-btn-delete').html('已被预约').attr('disabled', 'disabled');
       }
     })
@@ -185,15 +185,31 @@ $(function() {
                     .append(calEvent.end.format('YYYY-MM-DD HH:mm:ss'));
 
     var visDiv = $('<div id="visiDiv"></div>');
-    var visChosenList = $('<div id="visChosenList"></div>');
+    var visChosenList = $('<div id="visChosenList"></div>').append('可见分组：');
     for(idx in calEvent.visibleGroups) {
       visChosenList.append('<span>' + calEvent.visibleGroups[idx] + '</span>');
     }
-    visDiv.append('可见分组：').append(visChosenList);
+    visDiv.append(visChosenList);
 
     content.append($('<div>时间：</div>').append(startDiv).append(' ~ ').append(endDiv))
            .append(visDiv)
-           .append($('<div>工作简述：</div>').append(calEvent.description));
+           .append($('<div>简述：</div>').append(calEvent.description));
+
+    var appointmentDiv = $('<div></div>');
+    var appointmentContact = $('<div id="stu-info" style="text-indent: 1.5em; line-height: 1em;"></div>');
+    if (calEvent.hasAppointment) {
+      appointmentDiv.append('预约学生：');
+      appointmentDiv.append('<a href="javascript:void(0);" id="show-stu-info-btn" class="btn-link">' + calEvent.appointmentAccountName + '</a>');
+      if (calEvent.appointmentAccountPhone.length > 0)
+        appointmentContact.append('<p style="margin: 0px;">手机：<b>' + calEvent.appointmentAccountPhone + '</b></p>');
+      if (calEvent.appointmentAccountShortPhone.length > 0)
+        appointmentContact.append('<p style="margin: 0px;">短号：<b>' + calEvent.appointmentAccountShortPhone + '</b></p>');
+      if (calEvent.appointmentAccountEmail.length > 0)
+        appointmentContact.append('<p style="margin: 0px;">邮箱：<b>' + calEvent.appointmentAccountEmail + "</b></p>");
+      appointmentDiv.append(appointmentContact);
+      content.append(appointmentDiv);
+    }
+
     $('.dialog-content').html(content);
     $('.dialog').fadeIn();
     $('.mash').fadeIn();
@@ -347,9 +363,11 @@ $(function() {
     });
   });
 
-  window.onbeforeunload = function(){
-  if (freeTime.length > 0 || deleteTime.length > 0)
-    return "您未保存修改，确定离开页面吗？";
+  window.onbeforeunload = function() {
+    if (freeTime.length > 0 || deleteTime.length > 0) {
+      document.body.scrollTop = document.body.scrollHeight
+      return "您未保存修改，确定离开页面吗？";
+    }
   }
 });
 </script>

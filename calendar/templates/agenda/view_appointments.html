@@ -1,0 +1,51 @@
+{% extends 'dashboard/base.html' %}
+
+{% block htmlhead %}
+{{ renderCss('styles/agenda.css') | raw }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<li>查看预约</li>
+{% endblock %}
+
+{% block content_header %}
+<div class="content-header">
+查看预约
+</div>
+{% endblock %}
+
+
+{% block content_body %}
+<div class="pull-left agenda-list">
+  <div class="group-list-title group-title">预约列表</div>
+  <div class="group-list-body group-body">
+    <table class="appointments-list">
+      <thead>
+        <tr>
+          <th class="time-during">时段</th>
+          <th class="student-info">学生</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for each in appointments %}
+        <tr>
+          <td>{{ each.calendar.startTime | date('Y-m-d H:i:s') }} - {{ each.calendar.endTime | date('Y-m-d H:i:s') }}</td>
+          <td>
+            {{ each.account.name }}
+            <br />
+            手机：{% if each.account.phone %}{{ each.account.phone }}{% else %}无{% endif %}
+            <br />
+            短号：{% if each.account.shortPhone %}{{ each.account.shortPhone }}{% else %}无{% endif %}
+            <br />
+            邮箱：{% if each.account.email %}{{ each.account.email }}{% else %}无{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block bodyfoot %}
+{% endblock %}
