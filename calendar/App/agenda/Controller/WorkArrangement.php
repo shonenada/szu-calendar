@@ -29,9 +29,11 @@ class WorkArrangement extends \Controller\BaseController {
             $freeTime = $post['freeTime'];
             foreach ($freeTime as $each) {
                 $visibleGroups = new \Doctrine\Common\Collections\ArrayCollection();
-                foreach ($each['visiableGroup'] as $gid) {
-                    $group = \Model\AccountGroup::find($gid);
-                    $visibleGroups[] = $group;
+                if (isset($each['visiableGroup'])) {
+                    foreach ($each['visiableGroup'] as $gid) {
+                        $group = \Model\AccountGroup::find($gid);
+                        $visibleGroups[] = $group;
+                    }
                 }
 
                 $calendar = new \Model\Calendar();
@@ -40,6 +42,7 @@ class WorkArrangement extends \Controller\BaseController {
                 $calendar->title = $each['title'];
                 $calendar->visibleGroups = $visibleGroups;
                 $calendar->description = $each['description'];
+                $calendar->workPlace = $each['place'];
                 $calendar->startTime = \DateTime::createFromFormat('Y-m-d H:i:s', $each['start']);
                 $calendar->endTime = \DateTime::createFromFormat('Y-m-d H:i:s', $each['end']);
                 $calendar->save();
