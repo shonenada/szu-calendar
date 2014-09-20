@@ -74,3 +74,25 @@
   margin: 3px;
   color: #fff;
 }
+
+.agenda-list {
+  width: 100%;
+  border: 1px solid #ddd;
+}
+
+.appointments-list {
+  width: 100%;
+  text-align: center;
+}
+
+.appointments-list td {
+  min-height: 40px;
+}
+
+.appointments-list .time-during {
+  width: 40px;
+}
+
+.appointments-list .student-info {
+  width: 55%;
+}
