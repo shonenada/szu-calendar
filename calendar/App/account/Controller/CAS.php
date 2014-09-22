@@ -38,12 +38,27 @@ class CAS extends \Controller\BaseController {
             $college = $_SESSION['cas']['OrgName'] = self::RegexLog($xmlString, "OrgName");
             $gender = $_SESSION['cas']['SexName'] = self::RegexLog($xmlString, "SexName");
             $szuno = $_SESSION['cas']['StudentNo'] = self::RegexLog($xmlString, "StudentNo");
-            $card_id = $_SESSION['cas']['ICAccount'] = self::RegexLog($xmlString, "ICAccount");
+            $cardId = $_SESSION['cas']['ICAccount'] = self::RegexLog($xmlString, "ICAccount");
             $identityNumber = $_SESSION['cas']['PersonalId'] = self::RegexLog($xmlString, "PersonalId");
             $rankNum = $_SESSION['cas']['RankName'] = self::RegexLog($xmlString, "RankName");
 
-            $account = \Model\Account::getBy('szuno', $szuno);
+            $account = \Model\Account::getBy('identityNumber', $identityNumber);
             if ($account) {
+                if (!isset($account->college) || strlen($account->college) == 0) {
+                    $account->college = $college;
+                }
+                if (!isset($account->gender) || strlen($account->gender) == 0) {
+                    $account->gender = $gender;
+                }
+                if (!isset($account->szuno) || strlen($account->szuno) == 0) {
+                    $account->szuno = $szuno;
+                }
+                if (!isset($account->cardId) || strlen($account->cardId) == 0) {
+                    $account->cardId = $cardId;
+                }
+                if (!isset($account->rankNum) || strlen($account->rankNum) == 0) {
+                    $account->rankNum = $rankNum;
+                }
                 $account->login(self::$app);
             } else {
                 $accountData = array(
