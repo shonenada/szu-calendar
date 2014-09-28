@@ -50,6 +50,35 @@ $(function() {
     $('.mash').fadeOut('fast');
   }
 
+  var showAppointmentDetail = function(calEvent, jsEvent, view) {
+    $('.dialog-foot-div').hide();
+    $('#add-appointment-dialog-foot').hide();
+    $('.dialog-foot').hide();
+    $('.dialog-title-content').html('预约时段');
+    var content = $('<div></div>');
+
+    var startDiv = $('<span></span>')
+                    .addClass('datetime-format')
+                    .append(calEvent.start.format('YYYY-MM-DD HH:mm:ss'));
+    var endDiv = $('<span></span>')
+                    .addClass('datetime-format')
+                    .append(calEvent.end.format('YYYY-MM-DD HH:mm:ss'));
+
+    var placeInfo = $('<div></div>');
+    placeInfo.append('地点: ').append($('<strong></strong>').append(calEvent.work_place));
+
+    var additionalInfo = $('<div></div>');
+    if (calEvent.descrition) {
+      additionalInfo.append('附加信息: ').append($('<div></div>').append(calEvent.remark));
+    }
+    content.append($('<div>预约时间：</div>').append(startDiv).append(' ~ ').append(endDiv));
+    content.append(placeInfo);
+    content.append(additionalInfo);
+    $('.dialog-content').html(content);
+    $('.dialog').fadeIn('fast');
+    $('.mash').fadeIn('fast');
+  }
+
   var showAppointmentDialog = function(calEvent, jsEvent, view) {
     currentClickEvent = calEvent;
     $('.dialog-foot-div').hide();
@@ -188,7 +217,7 @@ $(function() {
     },
     eventClick: function (calEvent, jsEvent, view) {
       if (calEvent.mine) {
-        return showAppointmentDetail(calEvent, jsEvent, view);
+        showAppointmentDetail(calEvent, jsEvent, view);
       }
       if (calEvent.canAppoint) {
         showAppointmentDialog(calEvent, jsEvent, view);
