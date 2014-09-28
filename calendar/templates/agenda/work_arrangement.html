@@ -358,12 +358,6 @@ $(function() {
     });
   });
 
-  window.onbeforeunload = function() {
-    if (freeTime.length > 0 || deleteTime.length > 0) {
-      document.body.scrollTop = document.body.scrollHeight
-      return "您未保存修改，确定离开页面吗？";
-    }
-  }
 });
 </script>
 {% endblock %}
