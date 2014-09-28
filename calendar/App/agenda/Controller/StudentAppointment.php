@@ -76,6 +76,7 @@ class StudentAppointment extends \Controller\BaseController {
         $currentCalendar->startTime = $inputStart;
         $currentCalendar->endTime = $inputEnd;
         $currentCalendar->visibleGroups = $visibleGroups;
+        $currentCalendar->type = \Model\Calendar::TYPE_BOOKED;
         $currentCalendar->save();
         $calendar->delete();
         \Model\Calendar::flush();

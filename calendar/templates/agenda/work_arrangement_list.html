@@ -5,12 +5,12 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-<li>查看预约</li>
+<li>工作安排</li>
 {% endblock %}
 
 {% block content_header %}
 <div class="content-header">
-查看预约
+工作安排
 </div>
 {% endblock %}
 
@@ -22,29 +22,25 @@
         <tr>
           <th class="time-date" style="width: 20%;">日期</th>
           <th class="time-during" style="width: 20%;">时段</th>
-          <th class="event">预约情况</th>
+          <th class="event">工作安排</th>
         </tr>
       </thead>
       <tbody>
-        {% for each in appointments %}
-        <tr class="underlined">
-          <td>{{ each.calendar.startTime | date('Y-m-d') }}</td>
-          <td>{{ each.calendar.startTime | date('H:i') }} - {{ each.calendar.endTime | date('H:i') }}</td>
+        {% for each in calendars %}
+        <tr class="underlined" {% if each.startTime <= now %}style="background: #FFE8E8"{% endif %}>
+          <td>{{ each.startTime | date('Y-m-d') }}</td>
+          <td>{{ each.startTime | date('H:i') }} - {{ each.endTime | date('H:i') }}</td>
           <td class="event">
-            {{ each.account.name }}
+            {{ each.title }}
             <img src="{{ siteUrl('/static/images/plus.png') }}" id="list-plus-btn-{{ each.id }}" class="list-plus-btn" data-id="{{ each.id }}" />
             <img src="{{ siteUrl('/static/images/minus.png') }}" id="list-minus-btn-{{ each.id }}" class="list-minus-btn" data-id="{{ each.id }}" />
           </td>
         </tr>
-        <tr id="desc-{{ each.id }}" class="event-description">
+        <tr id="desc-{{ each.id }}" class="event-description" {% if each.startTime <= now %}style="background: #FFE8E8"{% endif %}>
           <td>&nbsp;</td>
           <td>&nbsp;</td>
           <td class="event-description-item">
-            手机：{% if each.account.phone %}{{ each.account.phone }}{% else %}无{% endif %}
-            <br />
-            短号：{% if each.account.shortPhone %}{{ each.account.shortPhone }}{% else %}无{% endif %}
-            <br />
-            邮箱：{% if each.account.email %}{{ each.account.email }}{% else %}无{% endif %}
+            工作描述：{{ each.description }}
           </td>
         </tr>
         {% endfor %}
@@ -52,6 +48,7 @@
     </table>
   </div>
 </div>
+<div style="height: 100px;"></div>
 {% endblock %}
 
 {% block bodyfoot %}
@@ -75,10 +72,6 @@ $('.list-minus-btn').each(function() {
     $('#list-plus-btn-' + id).show();
     self.hide();
   });
-});
-$('.list-plus-btn').each(function() {
-  var self = $(this);
-  self.click()  ;
 });
 </script>
 {% endblock %}

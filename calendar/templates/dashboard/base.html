@@ -42,7 +42,10 @@
           <a href="javascript:void(0);" class="nav-dropdown">日程安排 <i class="arrow icon-angle-down"></i></a>
           <ul class="dropdown-navlist">
             {% if user.hasPerm('agenda.work_arrangement[get]') %}
-            <li><a href="{{ urlFor('agenda.work_arrangement[get]') }}">工作安排</a></li>
+            <li><a href="{{ urlFor('agenda.work_arrangement[get]') }}">工作安排(日历)</a></li>
+            {% endif %}
+            {% if user.hasPerm('agenda.work_arrangement_list[get]') %}
+            <li><a href="{{ urlFor('agenda.work_arrangement_list[get]') }}">工作安排(列表)</a></li>
             {% endif %}
             {% if user.hasPerm('agenda.view_appointment[get]') %}
             <li><a href="{{ urlFor('agenda.view_appointment[get]') }}">查看预约</a></li>

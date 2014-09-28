@@ -22,7 +22,9 @@ namespace Model;
 
 class Calendar extends ModelBase {
 
-    const TYPE_FREE = 'FREETIME';
+    const TYPE_FREE = 'FREE';
+    const TYPE_BOOKED = 'BOOKED';
+
     static public $presetColor = array(
         'red' => array(
             'color' => '#d15b47',
@@ -252,9 +254,14 @@ class Calendar extends ModelBase {
         );
         $args = array_merge($defaultArgs, $inputArgs);
         $calendarArr = array_filter($calendarArr, function($one) use($start, $end, $args) {
-            $ret = ($one->startTime->getTimestamp() >= $start
-                    && $one->endTime->getTimestamp() <= $end
-                    && $one->isDeleted == false);
+            $ret = ($one->isDeleted == false);
+
+            if (isset($start) && $start != null)
+                $ret = $ret && ($one->startTime->getTimestamp() >= $start);
+
+            if (isset($end) && $end != null)
+                $ret = $ret && ($one->endTime->getTimestamp() <= $end);
+
             if ($args['type'] != null) {
                 return $ret && $one->type == $args['type'];
             } else {
@@ -289,12 +296,15 @@ class Calendar extends ModelBase {
         }
     }
 
-    static public function getTeacherAppointment($teacherAccount) {
+    static public function getTeacherAppointment($teacherAccount, $noBefore=False) {
         $appointments = array();
         $now = new \DateTime();
         $calendars = $teacherAccount->calendars;
         foreach ($calendars as $cls) {
-            if ($cls->startTime > $now && $cls->appointment) {
+            if ($noBefore && $cls->startTime < $now) {
+                continue;
+            }
+            if ($cls->appointment) {
                 $appointments[] = $cls->appointment;
             }
         }

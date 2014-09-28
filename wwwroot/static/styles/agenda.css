@@ -103,22 +103,39 @@
   text-align: center;
 }
 
+.appointments-list thead {
+  background: #eee;
+  line-height: 40px;
+  border-bottom: solid 1px #ddd;
+}
+
 .appointments-list td {
   min-height: 40px;
 }
 
-.appointments-list .time-during {
-  width: 40px;
+.appointments-list tbody tr.underlined {
+  line-height: 35px;
+  border-top: 1px solid #ddd;
 }
-
-.appointments-list .student-info {
-  width: 55%;
+.appointments-list tbody tr:first-child {
+  line-height: 35px;
+  border-bottom: 0px;
 }
 
 #calendar {
   margin-bottom: 30px;
 }
+
 .saveAgenda {
   margin: 0;
   margin-right: 10px;
+}
+
+td.event,
+td.event-description-item {
+  text-align: left;
+}
+
+td.event-description-item {
+  font-size: 14px;
 }
