@@ -207,6 +207,8 @@ $(function() {
         appointmentContact.append('<p style="margin: 0px;">短号：<b>' + calEvent.appointmentAccountShortPhone + '</b></p>');
       if (calEvent.appointmentAccountEmail.length > 0)
         appointmentContact.append('<p style="margin: 0px;">邮箱：<b>' + calEvent.appointmentAccountEmail + "</b></p>");
+      if (calEvent.appointmentRemark.length > 0)
+        appointmentContact.append('<p style="margin: 0px;">学生留言：<b>' + calEvent.appointmentRemark + "</b></p>");
       appointmentDiv.append(appointmentContact);
       content.append(appointmentDiv);
     }
@@ -276,7 +278,7 @@ $(function() {
     allDaySlot: false,
     minTime: '07:00:00',
     maxTime: '23:00:00',
-    slotDuration: '00:15:00',
+    slotDuration: '00:05:00',
     defaultView: 'agendaWeek',
     defaultDate: y + '-' + (m+1) + '-' + d,
     editable: true,

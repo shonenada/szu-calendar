@@ -64,7 +64,7 @@
           <a href="javascript:void(0);" class="nav-dropdown">预约管理 <i class="arrow icon-angle-down"></i></a>
           <ul class="dropdown-navlist">
           {% if user.hasPerm('agenda.student_appointment[get]') %}
-            <li><a href="{{ urlFor('agenda.student_appointment[get]') }}">预约教师</a></li>
+            <li><a href="{{ urlFor('agenda.student_appointment[get]') }}">预约时段</a></li>
           {% endif %}
           </ul>
         </li>

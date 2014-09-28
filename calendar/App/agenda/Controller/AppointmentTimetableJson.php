@@ -33,6 +33,7 @@ class AppointmentTimetableJson extends \Controller\BaseController {
                 $insert['color'] = '#1ba15f';
                 $insert['borderColor'] = '#1d8e7b';
             }
+            $insert['work_place'] = $one->workPlace;
             $insert['teacherName'] = $one->account->name;
             return $insert;
         });

@@ -45,6 +45,8 @@
             短号：{% if each.account.shortPhone %}{{ each.account.shortPhone }}{% else %}无{% endif %}
             <br />
             邮箱：{% if each.account.email %}{{ each.account.email }}{% else %}无{% endif %}
+            <br />
+            学生留言：{% if each.remark %}{{ each.remark }}{% else %}无{% endif %}
           </td>
         </tr>
         {% endfor %}

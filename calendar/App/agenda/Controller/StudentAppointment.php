@@ -24,7 +24,9 @@ class StudentAppointment extends \Controller\BaseController {
 
         $cid = self::$request->post('cid');
         $calendar = \Model\Calendar::find($cid);
-        if ($calendar == null || !$calendar->canVisitedByAccount(self::$currentUser)) {
+        if ($calendar == null
+            || !$calendar->canVisitedByAccount(self::$currentUser)
+            || $calendar->type == \Model\Calendar::TYPE_BOOKED) {
             return json_encode(array(
                 'success' => false,
                 'message' => '无法预约该时段',
@@ -35,8 +37,25 @@ class StudentAppointment extends \Controller\BaseController {
 
         $inputStartString = self::$request->post('start');
         $inputStart = \DateTime::createFromFormat('Y-m-d H:i:s', $inputStartString);
+
         $inputEndString = self::$request->post('end');
         $inputEnd = \DateTime::createFromFormat('Y-m-d H:i:s', $inputEndString);
+
+        $during = \Model\Calendar::findBy(array('startTime' => $inputStart));
+        foreach($during as $each) {
+            $found = false;
+            if ($each->canVisitedByAccount(self::$currentUser)
+                && $each->type == \Model\Calendar::TYPE_FREE) {
+                $found = true;   
+            }
+            if (!$found) {
+                return json_encode(array(
+                    'success' => false,
+                    'message' => '无法预约该时段',
+                ));
+            }
+        }
+
 
         $newClds = self::rebuildCalendar($calendar, $inputStart, $inputEnd);
 

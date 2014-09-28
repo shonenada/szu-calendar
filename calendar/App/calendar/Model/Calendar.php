@@ -281,6 +281,7 @@ class Calendar extends ModelBase {
                     $insert['appointmentAccountPhone'] = $one->appointment->account->phone;
                     $insert['appointmentAccountShortPhone'] = $one->appointment->account->shortPhone;
                     $insert['appointmentAccountEmail'] = $one->appointment->account->email;
+                    $insert['appointmentRemark'] = $one->appointment->remark;
                     $insert['color'] = static::$presetColor['yellow']['color'];
                 } else {
                     $insert['editable'] = true;
