@@ -25,6 +25,7 @@ namespace Model;
  * @property string    $email
  * @property string    $phone
  * @property string    $shortPhone
+ * @property string    $place
  * @property datetime  $created
  * @property datetime  $lastLogin
  * @property string    $lastIP
@@ -40,6 +41,12 @@ class Account extends ModelBase {
     const PASSWORD_SALT = 'TODO';
     const TOKEN_SALT = 'TOKENTODO';
 
+    public static $studentRankNums = array(
+        '01', '02', '03', '04'
+    );
+    public static $teacherRankNums = array(
+        '05', '20',
+    );
     public static $RANK_NAME = array(
         '01' => '本科生',
         '02' => '研究生',
@@ -139,6 +146,11 @@ class Account extends ModelBase {
      * @Column(name="short_phone", type="string", length=11)
      **/
     public $shortPhone;
+
+    /**
+     * @Column(name="place", type="string", length=300)
+     **/
+    public $place;
 
     /**
      * @Column(name="created", type="datetime")
@@ -253,6 +265,14 @@ class Account extends ModelBase {
         return $this->lastIP == $ip;
     }
 
+    public function isTeacher() {
+        return in_array($this->rankNum, self::$teacherRankNums);
+    }
+
+    public function isStudent() {
+        return in_array($this->rankNum, self::$studentRankNums);
+    }
+
     static public function factory($value = array()) {
         $account = new Account();
 
@@ -292,6 +312,9 @@ class Account extends ModelBase {
 
         if (isset($value['shortPhone']))
             $account->shortPhone = $value['shortPhone'];
+
+        if (isset($value['place']))
+            $account->place = $value['place'];
 
         return $account;
     }

@@ -32,6 +32,7 @@ class Profile extends \Controller\BaseController {
             }
             $account->username = self::$request->post('username');
         }
+        $account->place = self::$request->post('place');
         $account->email = self::$request->post('email');
         $account->phone = self::$request->post('phone');
         $account->shortPhone = self::$request->post('shortPhone');

@@ -89,7 +89,7 @@ $(function() {
     titleDiv.append('标题：').append(titleInput);
 
     var placeDiv = $('<div></div>');
-    var placeInput = $('<input type="text" id="place" class="input-text" />');
+    var placeInput = $('<input type="text" id="place" class="input-text" value="{{ user.place }}"/>');
     placeDiv.append('地点：').append(placeInput);
 
     var timeDiv = $("<div></div>");

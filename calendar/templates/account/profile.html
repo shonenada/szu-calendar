@@ -19,6 +19,18 @@
         <label class="label">用户名*</label>
         <input type="text" name="username" placeholder="用户名" value="{{ user.username }}" {% if user.username %}disabled="disabled"{% endif %}/>
       </div>
+      {% if user.isTeacher %}
+      <div class="form-field">
+        <label class="label">工作地点</label>
+        <input type="text" name="place" placeholder="工作地点" value="{{ user.place }}" />
+      </div>
+      {% endif %}
+      {% if user.isStudent %}
+      <div class="form-field">
+        <label class="label">宿舍地址</label>
+        <input type="text" name="place" placeholder="宿舍地址" value="{{ user.place }}" />
+      </div>
+      {% endif %}
       <div class="form-field">
         <label class="label">邮箱</label>
         <input type="text" name="email" placeholder="邮箱" value="{{ user.email }}" />
