@@ -42,9 +42,9 @@
 
 <a href="javascript:void(0)" id="add-group-btn" class="btn btn-info" style="margin: 0 0 20px 0;">添加分组</a>
 {% if currentGroup %}
-<a href="javascript:void(0)" id="modify-list-btn" class="btn btn-success" style="margin: 0 0 20px 0;">添加学生</a>
+<a href="javascript:void(0)" id="modify-list-btn" class="btn btn-success" style="margin: 0 0 20px 0;">添加/删除学生</a>
 <a href="javascript:void(0)" id="list-student-btn" class="btn btn-warning" style="margin: 0 0 20px 0; display: none;">返回列表</a>
-<a href="javascript:void(0)" id="delete-group-btn" class="btn btn-danger" style="margin: 0 0 20px 0;">删除分组</a>
+<a href="javascript:void(0)" id="delete-group-btn" class="btn btn-danger" style="margin: 0 0 20px 0;">删除 【{{ currentGroup.name }}】 分组</a>
 {% endif %}
 
 <div style="overflow: auto">
@@ -84,7 +84,7 @@
     <div class="group-detail-title group-title">组内无学生</div>
     {% endif %}
     <div class="group-detail-body group-body">
-      <ul class="group-list-ul group-ul">
+      <ul class="group-detail-list-ul group-detail-ul">
         {% for student in currentGroup.accounts %}
         <li><a href="javascript:void(0)">{{ student.name }}</a></li>
         {% endfor %}

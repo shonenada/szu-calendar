@@ -54,6 +54,19 @@
   font-weight: bold;
 }
 
+.group-detail-ul li {
+  display: inline-block;
+  text-align: center;
+  padding: 5px;
+  min-width: 60px;
+  margin: 0px 5px;
+}
+
+.group-detail-body {
+  border-top: 1px solid #ddd;
+  padding: 5px;
+}
+
 .student-list-item {
   display: inline-block;
   margin: 5px 0px 5px 5px;
@@ -100,4 +113,12 @@
 
 .appointments-list .student-info {
   width: 55%;
+}
+
+#calendar {
+  margin-bottom: 30px;
+}
+.saveAgenda {
+  margin: 0;
+  margin-right: 10px;
 }

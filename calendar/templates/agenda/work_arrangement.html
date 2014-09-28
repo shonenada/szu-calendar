@@ -39,11 +39,12 @@
   </div>
   </form>
 </div>
-<div id="calendar"></div>
 
-<div class="pull-right" style="margin-bottom: 20px;">
-  <button type="button" class="btn btn-success saveAgenda">保存</button>
+<div class="pull-left">
+  <button type="button" class="btn btn-success saveAgenda">保存安排</button>
 </div>
+
+<div id="calendar"></div>
 {% endblock %}
 
 {% block bodyfoot %}
@@ -269,7 +270,7 @@ $(function() {
     header: {
       left: 'prev,next,today',
       center: 'title',
-      right: 'month,agendaWeek',
+      right: 'month,agendaWeek,agendaDay',
     },
     height: 'auto',
     allDaySlot: false,
