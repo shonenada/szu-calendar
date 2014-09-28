@@ -284,8 +284,6 @@ $(function() {
     selectHelper: true,
     events: function (start, end, timezone, callback) {
       var timer;
-      start.zone('+08:00');
-      end.zone('+08:00');
       $('#calendar').fullCalendar('removeEvents');
       freeTime.splice(0, freeTime.length);
       deleteTime.splice(0, deleteTime.length);
