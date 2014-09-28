@@ -262,11 +262,6 @@ $(function() {
   var freeTime = [];
   var deleteTime = [];
 
-  var date = new Date();
-  var d = date.getDate();
-  var m = date.getMonth();
-  var y = date.getFullYear();
-
   calendar = $('#calendar').fullCalendar({
     lang: 'zh-cn',
     header: {
@@ -280,7 +275,6 @@ $(function() {
     maxTime: '23:00:00',
     slotDuration: '00:05:00',
     defaultView: 'agendaWeek',
-    defaultDate: y + '-' + (m+1) + '-' + d,
     editable: true,
     eventLimit: false,
     selectable: true,
